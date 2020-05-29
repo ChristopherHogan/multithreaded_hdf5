@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-amplxe-cli -collect threading -o cori_no_locks ./h5dread_mt test.h5 8
+amplxe-cli -collect threading -result-dir cori_no_locks ./h5dread_mt test.h5 8
 
 pushd hdf5
 git checkout HEAD~1
@@ -12,7 +12,7 @@ popd
 
 make -B
 
-amplxe-cli -collect threading -o cori_lock_side_calls ./h5dread_mt test.h5 8
+amplxe-cli -collect threading -result-dir cori_lock_side_calls ./h5dread_mt test.h5 8
 
 pushd hdf5
 git checkout develop
@@ -23,4 +23,4 @@ popd
 
 make -B
 
-amplxe-cli -collect threading -o cori_develop ./h5dread_mt test.h5 8
+amplxe-cli -collect threading -result-dir cori_develop ./h5dread_mt test.h5 8
