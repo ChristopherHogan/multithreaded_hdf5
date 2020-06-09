@@ -1,0 +1,140 @@
+#+DATE: <2020-06-09 Tue> 
+
+* Multithreaded H5Dread Progress
+** Assumptions
+   - Assuming no errors are encountered
+   - Assuming all initialization is complete before any thread calls H5Dread
+   - Assuming no thread is calling anything besides H5Dread
+** Test Program
+*** Main Thread
+    - Allocate space for each thread's read destination
+    - Open an hdf5 file read-only (8 datasets, ~512 MB each)
+    - Open all 8 datasets
+    - Spawn worker threads
+    - Wait for workers to complete
+    - Clean up resources
+*** Worker Threads
+    - Call H5Dread to read an entire dataset
+*** Profile of develop Branch
+** H5Dread Side Calls
+*** H5Dread
+**** H5I_object_verify
+**** H5CX_set_dxpl
+*** H5VL_dataset_read
+**** H5VL_set_vol_wrapper
+**** H5VL_reset_vol_wrapper
+*** H5VL__dataset_read
+*** H5VL__native_dataset_read
+**** H5S_get_validated_dataspace
+**** H5S_get_validated_dataspace
+*** H5D__read
+**** H5S_get_select_npoints
+**** H5D__typeinfo_init
+**** H5S_get_select_npoints
+**** H5S_has_extent
+**** H5S_has_extent
+**** H5S_select_shape_same
+**** H5S_get_simple_extent_ndims
+**** H5S_get_simple_extent_ndims
+**** H5D__contig_is_space_alloc
+**** H5D__contig_is_data_cached
+**** H5D__ioinfo_init
+**** H5D__contig_io_init
+**** H5D__typeinfo_term
+*** H5D__contig_read
+*** H5D__select_read
+*** H5D__select_io
+**** H5CX_get_vec_size
+**** H5S_select_iter_init
+**** H5S_select_iter_init
+**** H5S_select_iter_get_seq_list
+**** H5S_select_iter_get_seq_list
+**** H5S_select_iter_release
+**** H5S_select_iter_release
+*** H5D__contig_readvv
+**** H5F_shared_has_feature
+*** H5VM_opvv
+*** H5D__contig_readvv_sieve_cb
+*** H5F_shared_block_read
+**** H5F_addr_le
+*** H5PB_read
+*** H5F__accum_read
+*** H5FD_read
+**** H5CX_get_dxpl();
+**** H5FD_sec2_get_eoa
+*** H5DF_sec2_read
+**** H5F_addr_defined
+*** pread
+** Shared Data in Main H5Dread Path
+*** H5Dread
+*** H5VL_dataset_read(vol_obj, ...)
+*** H5VL__dataset_read(vol_obj->data, vol_obj->connector->cls, ...)
+**** read vol_obj->connector->cls->dataset_cls.read
+*** H5VL__native_dataset_read(vol_obj->data, ...)
+**** read vol_obj->data->oloc.file
+*** H5D__read(vol_obj->data, ..., mem_space, file_space
+**** read vol_obj->data->oloc.addr
+**** file_space = mem_space = vol_obj->data->shared->space
+**** read vol_obj->data->shared->dcpl_cache.efl.nused
+**** read vol_obj->data->shared->layout.ops->is_space_alloc
+**** read vol_obj->data->shared->layout.storage
+**** read vol_obj->data->shared->layout.ops->is_data_cached
+**** io_info.u.rbuf = buf;
+**** io_info refers to several vol_obj->data members, set in H5D__ioinfo_init
+***** io_info->dset = dset;
+***** io_info->f_sh = H5F_SHARED(dset->oloc.file);
+***** io_info->layout_ops = *dset->shared->layout.ops;
+**** read io_info.layout_ops.io_init
+**** read io_info.layout_ops.io_term
+*** H5D__contig_read(io_info, type_info, nelmts, file_spce, mem_space, fm)
+*** H5D__select_read(io_info, type_info, nelmts, file_space, mem_space)
+*** H5D__select_io(io_info, type_info->src_type_size, nelmts, file_spce, mem_space)
+**** read io_info->op_type
+**** read io_info->layout_ops.readvv
+*** H5D__contig_readvv(io_info, ...)
+**** udata.f_sh = io_info->f_sh;
+**** udata.dset_contig = &(io_info->dset->shared->cache.contig);
+**** udata.store_contig = &(io_info->store->contig);
+**** udata.rbuf = (unsigned char *)io_info->u.rbuf;
+*** H5VM_opvv(..., udata)
+*** H5D__contig_readvv_sieve_cb(..., udata)
+**** H5F_shared_t *f_sh = udata->f_sh;
+**** H5D_rdcdc_t *dset_contig = udata->dset_contig;
+**** const H5D_contig_storage_t *store_contig = udata->store_contig;
+**** read dset_contig->sieve_buf
+**** read dset_contig->sieve_loc
+**** read dset_contig->sieve_size
+**** read store_contig->dset_addr
+**** buf = udata->rbuf + src_off;
+*** H5F_shared_block_read(f_sh, ...)
+*** H5PB_read(f_sh, ...)
+**** page_buf = f_sh->page_buf;
+*** H5F__accum_read(f_sh, ...)
+**** file = f_sh->lf;
+*** H5FD_read(file, ...)
+**** read file->access_flags
+**** read file->base_addr
+**** read file->cls->read
+*** H5FD_sec2_read(file, ...)
+**** write file->pos = addr; => vol_obj->data->oloc.file->shared->lf
+**** write file->op = OP_READ; => vol_obj->data->oloc.file->shared->lf
+*** pread(file->fd, ...)
+** Mutated Shared Data in Side Calls
+*** H5VL_dataset_read(vol_obj, ...)
+**** H5VL_set_vol_wrapper(vol_obj)
+***** H5VL__conn_inc_rc(vol_obj->connector);
+******* write connector->nrefs++;
+**** H5VL_reset_vol_wrapper(vol_obj)
+***** H5VL__free_vol_wrapper(vol_wrap_ctx)
+****** H5VL__conn_dec_rc(vol_wrap_ctx->connector)
+******* write connector->nrefs--; => vol_obj->connector
+** Next Steps
+   - H5Dwrite 8 threads, one dataset
+   - H5Dread 8 threads, one dataset
+   - H5Dopen and H5Dclose
+     - open
+     - sync
+     - read
+     - sync
+     - close
+   - Compression of different or same dataset(s) in read/write
