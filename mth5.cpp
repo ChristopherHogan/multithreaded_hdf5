@@ -17,6 +17,8 @@
 typedef uint32_t u32;
 typedef uint64_t u64;
 
+herr_t H5S__init_package();
+extern int H5S_init_g;
 const auto now = std::chrono::high_resolution_clock::now;
 const int max_threads = 8;
 
@@ -224,6 +226,9 @@ int main (int argc, char* argv[]) {
 
   hid_t file_id = H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);
   assert(file_id >= 0 && "Failed to open file");
+  // TODO(chogan): Normally this gets initialized on H5Dopen.
+  assert(H5S__init_package() >= 0);
+  H5S_init_g = 1;
 
   const char *dset_names[] = {"a", "b", "c", "d", "e", "f", "g", "h"};
   const size_t num_dsets = ARRAY_COUNT(dset_names);

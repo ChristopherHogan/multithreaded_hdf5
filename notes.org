@@ -2,10 +2,10 @@
 
 * H5Dread MT
 ** Assumptions
-*** Assuming no errors are encountered (Ignoring =HGOTO_ERROR=)
+*** Assuming no errors are encountered
 *** Assuming all library and pkg initialization is complete before any thread calls H5Dread
-*** Assuming no new types are registerd via H5Iregister_type
 *** Assuming no threads are doing anything except calling H5Dread
+*** Assuming default property lists
 ** Build options
 #+begin_src bash
 CFLAGS="-ggdb3 -O0 -DH5_NO_FREE_LISTS"    \
@@ -291,10 +291,6 @@ int main (int argc, char* argv[])
 ****** =connector->nrefs--;= // Should this be atomic?
 ****** H5I_dec_ref(connector->id)
 ******* TODO
-* Issues
-** H5private.h:1925 :: Not clear what this floating comment is referring to.
-* Questions
-** Bug? H5FDint.c:186
 * Implementation Tasks
 ** TODO Avoid proliferation of conditional compilation
 *** h5_win32_threads.c
@@ -442,17 +438,11 @@ int main (int argc, char* argv[])
 *** write file->pos = addr;
 *** write file->op = OP_READ;
 ** pread(file->fd, ...)
-* Next Steps
-** DONE Move global lock acquisition from FUNC_ENTER_API to the non-api FUNC_ENTER* macros
-*** DONE FUNC_ENTER_API_NOLOCK
-*** DONE FUNC_ENTER_NOAPI_THREADSAFE
-*** DONE FUNC_ENTER_NOAPI_NOERR_THREADSAFE
-*** DONE FUNC_ENTER_NOAPI_NOINIT_THREADSAFE
-*** DONE FUNC_ENTER_NOAPI_NOINIT_NOERR_THREADSAFE
-*** DONE FUNC_ENTER_STATIC_THREADSAFE
-*** DONE FUNC_ENTER_STATIC_NOERR_THREADSAFE
-*** DONE FUNC_ENTER_PACKAGE_NOERR_THREADSAFE
-** DONE Move global lock release from FUNC_LEAVE_API to non-api FUNC_LEAVE* macros
-*** DONE FUNC_LEAVE_API_NOLOCK
-*** DONE FUNC_LEAVE_NOAPI_THREADSAFE
-** TODO Must still set thread as uncancelable at API level
+* H5Dopen2
+** Side Calls
+*** 
+** Shared Data in Main Path
+* Questions
+  - Focusing on H5Dopen2
+* Issues
+  - H5S__init_package is called from H5Dopen. All other packages are initialized in H5Fopen.

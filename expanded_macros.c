@@ -1,14 +1,22 @@
 // FUNC_ENTER_API
+/// FUNC_ENTER_API_COMMON
+//// FUNC_ENTER_API_VARS
+//// FUNC_ENTER_COMMON
 hbool_t err_occurred = 0;
+///// FUNC_ENTER_CHECK_NAME
 static hbool_t func_check = 0;
 if(!func_check) {
   assert(is_api_call);
   func_check = 1;
 }
-
+/// FUNC_ENTER_API_THREADSAFE
+//// H5_FIRST_THREAD_INIT
 pthread_once(&H5TS_first_init_g, H5TS_pthread_first_thread_init);
+//// H5_API_UNSET_CANCEL
 H5TS_cancel_count_inc();
+//// H5_API_LOCK
 H5TS_mutex_lock(&H5_g.init_lock);
+/// FUNC_ENTER_API_INIT
 if(!(H5_g.H5_libinit_g) && !(H5_g.H5_libterm_g)) {
   (H5_g.H5_libinit_g) = 1;
   if(H5_init_library() < 0) {
@@ -20,7 +28,17 @@ if(!(H5_g.H5_libinit_g) && !(H5_g.H5_libterm_g)) {
     goto done;
   }
 }
-H5_PACKAGE_YES_INIT((-1))
+//// H5_PACKAGE_INIT
+///// H5_MY_PACKAGE_INIT => YES/NO
+//// H5_PACKAGE_YES_INIT
+if(!H5_PKG_INIT_VAR && !H5_TERM_GLOBAL) {                                 \
+  H5_PKG_INIT_VAR = TRUE;                                               \
+  if(H5_PKG_INIT_FUNC() < 0) {                                          \
+    H5_PKG_INIT_VAR = FALSE;                                          \
+    HGOTO_ERROR(H5E_FUNC, H5E_CANTINIT, err, "interface initialization failed") \
+      }                                                                     \
+}
+
 if(H5CX_push() < 0) {
   H5E_printf_stack(((void *)0), "/home/chogan/dev/hdf5/src/H5Dio.c", __func__, 166, H5E_ERR_CLS_g, ( H5E_FUNC_g), ( H5E_CANTSET_g), "can't set API context");
   err_occurred = 1;
@@ -31,6 +49,8 @@ if(H5CX_push() < 0) {
   }
 }
 H5E_clear_stack(((void *)0));
+//
+
 // FUNC_LEAVE_API
 (void)H5CX_pop();
 if(err_occurred) {
