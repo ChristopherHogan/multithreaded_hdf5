@@ -440,9 +440,64 @@ int main (int argc, char* argv[])
 ** pread(file->fd, ...)
 * H5Dopen2
 ** Side Calls
-*** 
+*** H5Dopen2
+**** H5CX_set_apl
+**** H5I_object
+**** H5VL_register
+*** H5VL_dataset_open
+**** H5VL_set_vol_wrapper
+**** H5VL_reset_vol_wrapper
+*** H5VL__dataset_open
+*** H5VL__native_dataset_open
+**** H5G_loc_real
+*** H5D__open_name
+**** H5G_loc_reset
+**** H5G_loc_find
+**** H5O_obj_type
+**** H5G_loc_free
+*** H5D_open
+**** H5O_loc_copy_shallow
+**** H5G_name_copy
+**** H5D__build_file_prefix
+**** H5D__build_file_prefix
+**** H5FO_opened
+**** H5FO_insert
+**** H5FO_top_incr
+*** H5D__open_oid
+**** H5AC_tag - goes through H5CX, so should be threadsafe
+**** H5D__new
+**** H5O_open
+**** H5O_msg_read
+**** H5T_set_loc
+**** H5S_read
+**** H5D__cache_dataspace_info
+**** H5I_register
+**** H5I_object
+**** H5D__layout_oh_read
+**** H5D__append_flush_setup
+**** H5O_msg_exists
+**** H5O_msg_read
+**** H5P_fill_value_cmp
+**** H5F_get_intent
+**** H5AC_tag
 ** Shared Data in Main Path
+*** H5Dopen2
+**** write vol_obj
+**** write loc_params
+**** write dset
+*** H5VL_dataset_open(vol_obj, loc_params, ...)
+*** H5VL__dataset_open(vol_obj->data, loc_params, vol_obj->connector->cls
+**** read vol_obj->connector->cls.open
+*** H5VL__native_dataset_open(vol_obj->data, loc_params, ...)
+*** H5D__open_name(loc, ...)
+*** H5D_open
+**** TODO Branch not considered: 1599
+*** H5D__open_oid
+**** TODO Branch not considered: 1807
+**** TODO Branch not considered: 1853
+**** TODO Branch not considered: 1865
 * Questions
   - Focusing on H5Dopen2
 * Issues
   - H5S__init_package is called from H5Dopen. All other packages are initialized in H5Fopen.
+
