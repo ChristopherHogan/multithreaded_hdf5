@@ -24,11 +24,11 @@ const int max_threads = 8;
 
 struct Barrier {
   int wait_count;
-  int const target_wait_count;
+  int target_wait_count;
   std::mutex mtx;
   std::condition_variable cond_var;
 
-  Barrier(int threads_to_wait_for) : wait_count(0), target_wait_count(threads_to_wait_for) {}
+  Barrier() {};
 
   void wait() {
     std::unique_lock<std::mutex> lk(mtx);
@@ -47,29 +47,22 @@ struct Barrier {
   }
 };
 
-hid_t open_dataset_and_sync(hid_t file_id, const char *dset_name, int num_threads) {
-  hid_t dset_id = H5Dopen(file_id, dset_name, H5P_DEFAULT);
-  fprintf(stdout, "Opened %s\n", dset_name);
-  Barrier barrier(num_threads);
-  barrier.wait();
+Barrier open_barrier;
+Barrier read_barrier;
+Barrier close_barrier;
 
-  return dset_id;
-}
-
-void read_dataset(hid_t dset_id, const char *dset_name, void *dest) {
+void read_dataset(hid_t dset_id, const char *dset_name, void *dest, bool barrier) {
   assert(H5Dread(dset_id, H5T_STD_I64LE, H5S_ALL, H5S_ALL, H5P_DEFAULT, dest) >= 0);
   fprintf(stderr, "Read dataset %s\n", dset_name);
+  if (barrier) {
+    read_barrier.wait();
+  }
 }
 
-void read_dataset_and_sync(hid_t dset_id, const char *dset_name, void *dest, int num_threads) {
-  read_dataset(dset_id, dset_name, dest);
-  Barrier barrier(num_threads);
-  barrier.wait();
-}
-
-double open_and_close_on_main(hid_t file_id, const char **dset_names, std::vector<hid_t> &dset_ids, int num_threads,
-                              u64 **destinations) {
+double read_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t> &dset_ids,
+                       int num_threads, u64 **destinations) {
   size_t num_dsets = dset_ids.size();
+  auto start = now();
   for (size_t i = 0; i < num_dsets; ++i) {
     hid_t dset_id = H5Dopen(file_id, dset_names[i], H5P_DEFAULT);
     if (dset_id > 0) {
@@ -78,14 +71,15 @@ double open_and_close_on_main(hid_t file_id, const char **dset_names, std::vecto
       fprintf(stderr, "Failed to open dataset %s\n", dset_names[i]);
     }
   }
-
-  auto start = now();
   auto end = now();
+  fprintf(stderr, "Time for sequential opens: %f s.\n",
+          std::chrono::duration<double>(end - start).count());
 
+  start = now();
   if (num_threads == 1) {
     start = now();
     for (size_t i = 0; i < num_dsets; ++i) {
-      read_dataset(dset_ids[i], dset_names[i], destinations[i]);
+      read_dataset(dset_ids[i], dset_names[i], destinations[i], false);
     }
     end = now();
   } else {
@@ -93,12 +87,12 @@ double open_and_close_on_main(hid_t file_id, const char **dset_names, std::vecto
     start = now();
     for (int i = 1; i < num_threads; ++i) {
       // int j = i % ARRAY_COUNT(dset_names);
-      threads[i] = std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i]);
+      threads[i] = std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], false);
       fprintf(stderr, "Queued dataset %s\n", dset_names[i]);
     }
 
     fprintf(stderr, "Queued dataset %s\n", dset_names[0]);
-    read_dataset(dset_ids[0], dset_names[0], destinations[0]);
+    read_dataset(dset_ids[0], dset_names[0], destinations[0], false);
     for (int i = 1; i < num_threads; ++i) {
       threads[i].join();
     }
@@ -117,28 +111,45 @@ double open_and_close_on_main(hid_t file_id, const char **dset_names, std::vecto
   return total_seconds;
 }
 
-void open_and_read(hid_t file_id, const char *dset_name, int num_threads, u64 *dest) {
-  hid_t dset_id = open_dataset_and_sync(file_id, dset_name, num_threads);
-  read_dataset(dset_id, dset_name, dest);
+void open_dataset(hid_t file_id, const char *dset_name, hid_t *dset_id, bool barrier) {
+  hid_t id = H5Dopen(file_id, dset_name, H5P_DEFAULT);
+  assert(id >= 0);
+  *dset_id = id;
+  fprintf(stdout, "Opened %s\n", dset_name);
+  if (barrier) {
+    open_barrier.wait();
+  }
 }
 
-void open_read_and_close() {
-  
-}
-
-double open_and_read_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t> &dset_ids, int num_threads,
+double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_threads,
                                 u64 **destinations) {
-  std::thread threads[max_threads];
+  std::vector<std::thread> open_threads;
+  hid_t dset_ids[max_threads] = {};
+
+  fprintf(stderr, "Opens\n");
   auto start = now();
   for (int i = 0; i < num_threads; ++i) {
-    threads[i] = std::thread(open_and_read, file_id, dset_names[i], num_threads, destinations[i]);
-    fprintf(stderr, "Queued dataset %s\n", dset_names[i]);
+    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i], true));
   }
 
-  for (int i = 1; i < num_threads; ++i) {
-    threads[i].join();
+  for (auto &t : open_threads) {
+    t.join();
   }
   auto end = now();
+  fprintf(stderr, "Parallel opens: %f s.\n",std::chrono::duration<double>(end - start).count());
+  std::vector<std::thread> read_threads;
+
+  fprintf(stderr, "Reads\n");
+  start = now();
+  for (int i = 0; i < num_threads; ++i) {
+    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], true));
+  }
+
+  for (auto &t : read_threads) {
+    t.join();
+  }
+
+  end = now();
   double total_seconds = std::chrono::duration<double>(end - start).count();
   fprintf(stderr, "Total seconds to read 8 datasets with %d threads: %f\n", num_threads, total_seconds);
   printf("%f\n", total_seconds);
@@ -224,9 +235,14 @@ int main (int argc, char* argv[]) {
   u64 *g = (u64 *)malloc(dset_size * sizeof(u64));
   u64 *h = (u64 *)malloc(dset_size * sizeof(u64));
 
+  open_barrier.target_wait_count = num_threads;
+  read_barrier.target_wait_count = num_threads;
+  close_barrier.target_wait_count = num_threads;
+
   hid_t file_id = H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);
   assert(file_id >= 0 && "Failed to open file");
-  // TODO(chogan): Normally this gets initialized on H5Dopen.
+  // NOTE(chogan): Normally this gets initialized in H5Dopen. Do it here so all
+  // initialization is complete before starting worker threads.
   assert(H5S__init_package() >= 0);
   H5S_init_g = 1;
 
@@ -238,9 +254,9 @@ int main (int argc, char* argv[]) {
   if ((work_split & open_on_workers) && (work_split & close_on_workers)) {
     open_read_and_close_on_workers(file_id, dset_names, dset_ids, num_threads, destinations);
   } else if (work_split & open_on_workers) {
-    open_and_read_on_workers(file_id, dset_names, dset_ids, num_threads, destinations);
+    open_and_read_on_workers(file_id, dset_names, num_threads, destinations);
   } else {
-    open_and_close_on_main(file_id, dset_names, dset_ids, num_threads, destinations);
+    read_on_workers(file_id, dset_names, dset_ids, num_threads, destinations);
   }
 
   if (H5Fclose(file_id) < 0) {
@@ -255,6 +271,7 @@ int main (int argc, char* argv[]) {
       assert(current_dset[j] == counter++);
     }
   }
+  fprintf(stderr, "Success.\n");
 
   free(a);
   free(b);

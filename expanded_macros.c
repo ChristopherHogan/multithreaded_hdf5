@@ -139,3 +139,12 @@ static hbool_t func_check = 0;
   }
 H5AC_tag(dataset->oloc.addr, &prev_tag);
 if(H5D_init_g || !(H5_g.H5_libterm_g)) {
+
+
+// FUNC_ENTER_STATIC_TAG
+{
+  haddr_t prev_tag = ((haddr_t)(long)(-1));
+  hbool_t err_occurred = 0;;;
+  H5AC_tag(1, &prev_tag);
+  if(H5D_init_g || !(H5_g.H5_libterm_g)) {
+
