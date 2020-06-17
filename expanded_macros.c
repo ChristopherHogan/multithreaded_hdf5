@@ -148,3 +148,28 @@ if(H5D_init_g || !(H5_g.H5_libterm_g)) {
   H5AC_tag(1, &prev_tag);
   if(H5D_init_g || !(H5_g.H5_libterm_g)) {
 
+// H5C__SEARCH_INDEX(cache_ptr, addr, entry_ptr, NULL)
+// Looks up an entry in a hash table and return it in entry_ptr
+{
+  int k;
+  int depth = 0;
+  k = (int)((unsigned)((addr) & ((size_t)((64 * 1024) - 1) << 3)) >> 3);
+  entry_ptr = ((cache_ptr)->index)[k];
+  while(entry_ptr) {
+    if(((addr)!=((haddr_t)(long)(-1)) && (addr)==((entry_ptr)->addr))) {
+      if(entry_ptr != (cache_ptr->index)[k]) {
+        if(entry_ptr->ht_next) {
+          entry_ptr->ht_next->ht_prev = entry_ptr->ht_prev;
+        }
+        entry_ptr->ht_prev->ht_next = entry_ptr->ht_next;
+        (cache_ptr->index)[k]->ht_prev = entry_ptr;
+        entry_ptr->ht_next = (cache_ptr->index)[k];
+        entry_ptr->ht_prev = (void *)0;
+        (cache_ptr->index)[k] = entry_ptr;
+      }
+      break;
+    }
+    entry_ptr = entry_ptr->ht_next;
+    depth++;
+  }
+}

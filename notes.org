@@ -6,6 +6,7 @@
 *** Assuming all library and pkg initialization is complete before any thread calls H5Dread
 *** Assuming no threads are doing anything except calling H5Dread
 *** Assuming default property lists
+*** Assuming no mounted files
 ** Build options
 #+begin_src bash
 CFLAGS="-ggdb3 -O0 -DH5_NO_FREE_LISTS"    \
@@ -486,11 +487,50 @@ int main (int argc, char* argv[])
 **** write loc_params
 **** write dset
 *** H5VL_dataset_open(vol_obj, loc_params, ...)
-*** H5VL__dataset_open(vol_obj->data, loc_params, vol_obj->connector->cls
-**** read vol_obj->connector->cls.open
+*** H5VL__dataset_open(vol_obj->data, loc_params, vol_obj->connector->cls, ...)
+**** read vol_obj->connector->cls
 *** H5VL__native_dataset_open(vol_obj->data, loc_params, ...)
+    - loc
+    - loc.oloc = vol_obj->data->shared->root_grp->oloc
+    - loc.oloc.file = vol_obj->data
+    - loc.path = vol_obj->data->shared->root_grp->path
 *** H5D__open_name(loc, ...)
-*** H5D_open
+    - dset_loc
+    - path
+    - oloc
+    - dset_loc.oloc = &oloc
+    - dset_loc.path = &path
+**** H5G_loc_find(loc, name, &dset_loc)
+     - udata
+     - udata.loc = dset_loc
+***** H5G_traverse(loc, ..., &udata)
+****** H5G__traverse_real(loc, ..., udata)
+       - _loc
+       - _loc.oloc = loc->oloc
+       - _loc.path = loc->path
+       - grp_loc = _loc
+       - obj_loc = {}
+******* H5G__obj_lookup(grp_loc.oloc, ...)
+******** read grp_loc.oloc.addr
+******* H5G__obj_get_linfo(grp_loc.oloc, ...)
+******** read grp_loc.oloc.addr
+******** H5O_msg_exists(grp_loc.oloc, ...)
+********* read grp_loc.oloc.addr
+********** H5O_protect(grp_loc.oloc, ...)
+*********** read grp_loc.oloc.addr
+            - file_intent = grp_loc.oloc->file->shared->flags
+            - udata
+            - udata.common.f = grp_loc.oloc->file
+            - udata.common.addr = grp_loc.oloc->addr
+*********** H5AC_protect(grp_loc.oloc->file, ..., grp_loc.oloc->addr, &udata, ...)
+************ read grp_loc.oloc->file->shared->flags
+************ H5C_protect(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata, ...)
+             - cache_ptr = grp_loc.oloc->file->shared->cache
+************* H5C_load_entry(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata)
+              START AT H5C.c:6597
+
+*** H5D_open(loc, ...)
+    Start here!!
 **** TODO Branch not considered: 1599
 *** H5D__open_oid
 **** TODO Branch not considered: 1807
