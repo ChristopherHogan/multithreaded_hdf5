@@ -530,8 +530,41 @@ int main (int argc, char* argv[])
 **** TODO Branch not considered: 1865
 * H5DClose
 ** Side Calls
+*** H5Dclose
+**** DONE Replace ENTER/LEAVE macros with NOLOCK versions
+**** DONE H5I_get_type
+*** H5I_dec_app_ref_always_close
+*** H5I_dec_app_ref
+**** write id_ptr->app_count
+*** H5I_dec_ref
+**** DONE H5I__find_id
+***** write H5I_id_type_list_g[type]->last_info
+**** DONE H5I__remove_common
+*** H5D__close_cb
+**** DONE H5VL_free_object
+*** H5VL_dataset_close
+**** DONE H5VL_set_vol_wrapper
+**** DONE H5VL_reset_vol_wrapper
+*** H5VL__dataset_close
+*** H5VL__native_dataset_close
+*** H5D_close
+**** write and read dataset->shared->fo_count
+**** DONE H5D__flush_real
+**** write dataset->shared->closing
+**** DONE H5O_msg_reset
+**** DONE H5AC_cork
+**** DONE H5I_dec_ref
+**** DONE H5S_close
+**** DONE H5FO_top_decr
+**** DONE H5FO_delete
+**** DONE H5O_close
+**** write dataset->oloc.file
+**** free dataset->shared
+**** DONE H5G_name_free
+**** free dataset
 ** Shared Data in Main Path
 * Questions
   - Why is USE_SANITIZER feature in cmake only supported for clang?
+  - What is a "corked" dataset?
 * Issues
   - H5S__init_package is called from H5Dopen. All other packages are initialized in H5Fopen.
