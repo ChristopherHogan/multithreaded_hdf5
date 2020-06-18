@@ -1,6 +1,6 @@
 #+STARTUP: nologdone
 
-* H5Dread MT
+* Scope
 ** Assumptions
 *** Assuming no errors are encountered
 *** Assuming all library and pkg initialization is complete before any thread calls H5Dread
@@ -151,294 +151,288 @@ int main (int argc, char* argv[])
 }
 #+end_src
 * H5Dread
-** FUNC_ENTER_API(FAIL)
-*** FUNC_ENTER_API_COMMON
-**** FUNC_ENTER_API_VARS
-***** MPE_LOG_VARS :: Disabled (Instrumentation support)
-***** H5TRACE_DECL :: Disabled (Debug API tracing)
-**** FUNC_ENTER_COMMON(H5_IS_API(H5Dread))
-***** H5_IS_API(H5Dread) :: Parses argument to determine whether or not it's a (top level) API call
-**** FUNC_ENTER_COMMON(1) :: Declares =hbool_t err_occurred = 0;=
-***** FUNC_ENTER_CHECK_NAME(1) :: Makes sure the passed condition follows the correct naming conventions
-**** FUNC_ENTER_API_THREADSAFE
-***** H5_FIRST_THREAD_INIT :: Initialize thread-safe code
-****** =pthread_once(&H5TS_first_init_g, H5TS_pthread_first_thread_init);=
-****** =InitOnceExecuteOnce(&H5TS_first_init_g, H5TS_win32_process_enter, NULL, NULL);=
-***** H5_API_UNSET_CANCEL :: =H5TS_cancel_count_inc();=
-***** H5_API_LOCK :: =H5TS_mutex_lock(&H5_g.init_lock);=
-*** FUNC_ENTER_API_INIT(FAIL) :: Initialize library (if necessary)
-**** H5_INIT_GLOBAL :: H5_g.H5_libinit_g // when HAVE_THREADSAFE
-     - This is a global bool when ENABLE_THREADSAFE=OFF and a global struct with a lock when it's ON
-     - We will only read it because it is already initialized
-**** H5_TERM_GLOBAL
-     - This is a global bool when ENABLE_THREADSAFE=OFF and a global struct with a lock when it's ON
-     - possible read
-**** H5_init_library() Don't need to worry about this. It is called during H5Fopen
-***** FUNC_ENTER_NOAPI(FAIL)
-****** FUNC_ENTER_COMMON(!H5_IS_API(H5_init_library))
-****** FUNC_ENTER_NOAPI_INIT(FAIL)
-******* H5_PACKAGE_INIT(H5_MY_PKG_INIT, FAIL) -> nothing
-******* H5_PUSH_FUNC -> nothing (H5_HAVE_CODESTACK is not set)
-******* =if((1) || !(H5_g.H5_libterm_g)) {=
-***** H5_debug_g clear to zero.
-***** H5_debug_g.pkg[i].name assignment
-***** H5_dont_atexit_g read and possible assignment
-***** Register =atexit(H5_term_library)=
-***** FUNC_LEAVE_NOAPI(ret_value)
-****** H5_POP_FUNC -> nothing
-**** H5_PACKAGE_INIT(YES, FAIL) -> H5_PACKAGE_YES_INIT(FAIL)
-***** H5D_init_g read and possible write
-***** H5_g.H5_libterm_g read
-***** H5D__init_package() NOTE: H5P functions can cause deadlock when library tries to terminate
-      - Only one thread will (should) ever call this at once. All other threads must wait for it.
-      - Need package_init locks
-****** FUNC_ENTER_PACKAGE
-******* FUNC_ENTER_COMMON(H5_IS_PKG(H5D__init_package))
-******* H5_PUSH_FUNC -> nothing 
-******* =if(H5_PKG_INIT_VAR || !H5_TERM_GLOBAL) {=
-******** read H5D_init_g
-******** read H5_TERM_GLOBAL
-****** H5I_register_type(H5I_DATASET_CLS)
-**** H5_PUSH_FUNC -> nothing
-**** H5CX_push()
-***** FUNC_ENTER_NOAPI
-****** Read and possibly set H5CX_init_g
-***** H5CX__push_common()
-****** H5CX_get_my_context()
-******* H5CX__get_context() // when H5_HAVE_THREADSAFE, otherwise it returns a global context
-******** FUNC_ENTER_STATIC_NOERR
-********* FUNC_ENTER_COMMON_NOERR(H5_IS_PKG(FUNC));
-********** FUNC_ENTER_CHECK_NAME
-********* H5_PUSH_FUNC -> nothing
-********* =if(H5_PKG_INIT_VAR || !H5_TERM_GLOBAL) {=
-********** Read H5CX_init_g
-********** Read H5_TERM_GLOBAL
-******** H5TS_get_thread_local_value(H5TS_apictx_key_g)
-****** FUNC_ENTER_STATIC_NOERR
-****** FUNC_LEAVE_NOAPI_VOID
+*** FUNC_ENTER_API(FAIL)
+**** FUNC_ENTER_API_COMMON
+***** FUNC_ENTER_API_VARS
+****** MPE_LOG_VARS :: Disabled (Instrumentation support)
+****** H5TRACE_DECL :: Disabled (Debug API tracing)
+***** FUNC_ENTER_COMMON(H5_IS_API(H5Dread))
+****** H5_IS_API(H5Dread) :: Parses argument to determine whether or not it's a (top level) API call
+***** FUNC_ENTER_COMMON(1) :: Declares =hbool_t err_occurred = 0;=
+****** FUNC_ENTER_CHECK_NAME(1) :: Makes sure the passed condition follows the correct naming conventions
+***** FUNC_ENTER_API_THREADSAFE
+****** H5_FIRST_THREAD_INIT :: Initialize thread-safe code
+******* =pthread_once(&H5TS_first_init_g, H5TS_pthread_first_thread_init);=
+******* =InitOnceExecuteOnce(&H5TS_first_init_g, H5TS_win32_process_enter, NULL, NULL);=
+****** H5_API_UNSET_CANCEL :: =H5TS_cancel_count_inc();=
+****** H5_API_LOCK :: =H5TS_mutex_lock(&H5_g.init_lock);=
+**** FUNC_ENTER_API_INIT(FAIL) :: Initialize library (if necessary)
+***** H5_INIT_GLOBAL :: H5_g.H5_libinit_g // when HAVE_THREADSAFE
+      - This is a global bool when ENABLE_THREADSAFE=OFF and a global struct with a lock when it's ON
+      - We will only read it because it is already initialized
+***** H5_TERM_GLOBAL
+      - This is a global bool when ENABLE_THREADSAFE=OFF and a global struct with a lock when it's ON
+      - possible read
+***** H5_init_library() Don't need to worry about this. It is called during H5Fopen
+****** FUNC_ENTER_NOAPI(FAIL)
+******* FUNC_ENTER_COMMON(!H5_IS_API(H5_init_library))
+******* FUNC_ENTER_NOAPI_INIT(FAIL)
+******** H5_PACKAGE_INIT(H5_MY_PKG_INIT, FAIL) -> nothing
+******** H5_PUSH_FUNC -> nothing (H5_HAVE_CODESTACK is not set)
+******** =if((1) || !(H5_g.H5_libterm_g)) {=
+****** H5_debug_g clear to zero.
+****** H5_debug_g.pkg[i].name assignment
+****** H5_dont_atexit_g read and possible assignment
+****** Register =atexit(H5_term_library)=
+****** FUNC_LEAVE_NOAPI(ret_value)
+******* H5_POP_FUNC -> nothing
+***** H5_PACKAGE_INIT(YES, FAIL) -> H5_PACKAGE_YES_INIT(FAIL)
+****** H5D_init_g read and possible write
+****** H5_g.H5_libterm_g read
+****** H5D__init_package() NOTE: H5P functions can cause deadlock when library tries to terminate
+       - Only one thread will (should) ever call this at once. All other threads must wait for it.
+       - Need package_init locks
+******* FUNC_ENTER_PACKAGE
+******** FUNC_ENTER_COMMON(H5_IS_PKG(H5D__init_package))
+******** H5_PUSH_FUNC -> nothing
+******** =if(H5_PKG_INIT_VAR || !H5_TERM_GLOBAL) {=
+********* read H5D_init_g
+********* read H5_TERM_GLOBAL
+******* H5I_register_type(H5I_DATASET_CLS)
+***** H5_PUSH_FUNC -> nothing
+***** H5CX_push()
+****** FUNC_ENTER_NOAPI
+******* Read and possibly set H5CX_init_g
+****** H5CX__push_common()
+******* H5CX_get_my_context()
+******** H5CX__get_context() // when H5_HAVE_THREADSAFE, otherwise it returns a global context
+********* FUNC_ENTER_STATIC_NOERR
+********** FUNC_ENTER_COMMON_NOERR(H5_IS_PKG(FUNC));
+*********** FUNC_ENTER_CHECK_NAME
+********** H5_PUSH_FUNC -> nothing
+********** =if(H5_PKG_INIT_VAR || !H5_TERM_GLOBAL) {=
+*********** Read H5CX_init_g
+*********** Read H5_TERM_GLOBAL
+********* H5TS_get_thread_local_value(H5TS_apictx_key_g)
+******* FUNC_ENTER_STATIC_NOERR
+******* FUNC_LEAVE_NOAPI_VOID
+****** FUNC_LEAVE_NOAPI
+***** BEGIN_MPE_LOG -> nothing
+
+**** =H5E_clear_stack(NULL);= // Clear thread error stack before entering public function
+***** H5E__get_my_stack()
+****** H5E__get_stack() // When HAVE_THREADSAFE, otherwise this is a global
+******* Error stack exists per thread
+****** H5E__clear_entries TODO: Look closer at this
+**** H5TRACE6 -> nothing
+*** H5I_object_verify(dset_id, H5I_DATASET)
+**** H5I_next_type is global and read
+     - This is in an HDassert, so #define NDEBUG would get rid of it
+**** H5I__find_id
+***** FUNC_ENTER_STATIC_NOERR
+      - H5I_init_g read, H5_g.H5_libterm_g possibly read
+***** H5I_next_type read
+***** Reads from H5I_id_type_list_g array.
+      - Assuming no new types are registered, this should be fine.
+***** Reads H5I_id_type_t.init_count
+      - This seems to function as a reference count instead of an "init" count
+***** H5SL_search
+****** FUNC_ENTER_NOAPI_NOINIT_NOERR
+******* =if(H5SL_init_g || !(H5_g.H5_libterm_g))=
+****** slist->curr_level is read in H5SL_LOCATE_OPT
+****** Iterates through the skip list nodes. Other threads could insert/delete nodes?
+       - Each skip list probably needs a lock
+       - For first round, H5Dread does not modify property lists
 ***** FUNC_LEAVE_NOAPI
-**** BEGIN_MPE_LOG -> nothing
+**** Returns H5I_id_info_t.obj_ptr as vol_obj, which is shared data
+*** vol_obj is shared
+*** H5P_LST_DATASET_XFER_ID_g is read
+    - This shouldn't be an issue since it should already have been initialized
+*** H5CX_set_dxpl(dxpl_id);
+    - Thread safe
+*** H5VL_dataset_read
+**** H5VL_set_vol_wrapper
+***** H5CX_get_vol_wrap_ctx
+      - Thread safe
+***** H5VL__conn_inc_rc(vol_obj->connector)
+      - =connector->nrefs++;= should this be atomic?
+***** H5CX_set_vol_wrap_ctx(vol_wrap_ctx)
+      - Thread safe
 
-*** =H5E_clear_stack(NULL);= // Clear thread error stack before entering public function
-**** H5E__get_my_stack()
-***** H5E__get_stack() // When HAVE_THREADSAFE, otherwise this is a global
-****** Error stack exists per thread
-***** H5E__clear_entries TODO: Look closer at this
-** H5TRACE6 -> nothing
-** H5I_object_verify(dset_id, H5I_DATASET)
-*** H5I_next_type is global and read
-    - This is in an HDassert, so #define NDEBUG would get rid of it
-*** H5I__find_id
-**** FUNC_ENTER_STATIC_NOERR
-     - H5I_init_g read, H5_g.H5_libterm_g possibly read
-**** H5I_next_type read
-**** Reads from H5I_id_type_list_g array.
-     - Assuming no new types are registered, this should be fine.
-**** Reads H5I_id_type_t.init_count
-     - This seems to function as a reference count instead of an "init" count
-**** H5SL_search
-***** FUNC_ENTER_NOAPI_NOINIT_NOERR
-****** =if(H5SL_init_g || !(H5_g.H5_libterm_g))= 
-***** slist->curr_level is read in H5SL_LOCATE_OPT
-***** Iterates through the skip list nodes. Other threads could insert/delete nodes?
-      - Each skip list probably needs a lock
-      - For first round, H5Dread does not modify property lists
-**** FUNC_LEAVE_NOAPI
-*** Returns H5I_id_info_t.obj_ptr as vol_obj, which is shared data
-** vol_obj is shared
-** H5P_LST_DATASET_XFER_ID_g is read
-   - This shouldn't be an issue since it should already have been initialized
-** H5CX_set_dxpl(dxpl_id);
-   - Thread safe
-** H5VL_dataset_read
-*** H5VL_set_vol_wrapper
-**** H5CX_get_vol_wrap_ctx
-     - Thread safe
-**** H5VL__conn_inc_rc(vol_obj->connector)
-     - =connector->nrefs++;= should this be atomic?
-**** H5CX_set_vol_wrap_ctx(vol_wrap_ctx)
-     - Thread safe
+**** H5VL__dataset_read
+***** H5VL__native_dataset_read
+****** TODO: What is shared in H5D_t?
+****** H5S_get_validated_dataspace // Returns const H5S_t*, so probably safe.
+       - Since we're using H5S_ALL, this will always return NULL
+****** H5D__read
+******* FUNC_ENTER_PACKAGE_TAG(dataset->oloc.addr)
+******** ...
+******** H5AC_tag(dataset->oloc.addr, haddr_t MAXVAL)
+********* H5CX_get_tag
+          - Thread safe
+********* H5CX_set_tag
+          - Thread safe
+******* file_space = mem_space = dataset->shared->space; // This appears to be shared
+******* H5S_get_select_npoints(mem_space)
+        - reads mem_space->select.num_elem
+******* H5D__typeinfo_init
+******** H5F_get_vol_obj(dset->oloc.file) -> dset->oloc.file->vol_obj
+******** H5T_patch_vlen_file
+         - reads and possibly writes dt->shared->u.vlen.file
+         - reads dt->shared->type
+******** H5I_object_verify
+******** H5T_path_find
+********* Modifies "path database" H5T_g
 
+**** H5VL_reset_vol_wrapper
+***** H5CX_get_vol_wrap_ctx((void **)&vol_wrap_ctx)
+***** vol_wrap_ctx->rc--; // How is there a refcount if each thread has its own ctx?
+***** H5VL__free_vol_wrapper
+****** H5VL__conn_dec_rc(vol_wrap_ctx->connector)
+******* =connector->nrefs--;= // Should this be atomic?
+******* H5I_dec_ref(connector->id)
+******** TODO
+** Side Calls Requiring Global Lock
+*** H5Dread
+**** H5I_object_verify
+     - TODO Global lock
+**** H5CX_set_dxpl
+     - This looks thread safe
+*** H5VL_dataset_read
+**** H5VL_set_vol_wrapper
+     - TODO Global lock
+**** H5VL_reset_vol_wrapper
+     - TODO Global lock
 *** H5VL__dataset_read
-**** H5VL__native_dataset_read
-***** TODO: What is shared in H5D_t?
-***** H5S_get_validated_dataspace // Returns const H5S_t*, so probably safe.
-      - Since we're using H5S_ALL, this will always return NULL
-***** H5D__read
-****** FUNC_ENTER_PACKAGE_TAG(dataset->oloc.addr)
-******* ...
-******* H5AC_tag(dataset->oloc.addr, haddr_t MAXVAL)
-******** H5CX_get_tag
-         - Thread safe
-******** H5CX_set_tag
-         - Thread safe
-****** file_space = mem_space = dataset->shared->space; // This appears to be shared
-****** H5S_get_select_npoints(mem_space)
-       - reads mem_space->select.num_elem
-****** H5D__typeinfo_init
-******* H5F_get_vol_obj(dset->oloc.file) -> dset->oloc.file->vol_obj
-******* H5T_patch_vlen_file
-        - reads and possibly writes dt->shared->u.vlen.file
-        - reads dt->shared->type
-******* H5I_object_verify
-******* H5T_path_find
-******** Modifies "path database" H5T_g
-        
-*** H5VL_reset_vol_wrapper
-**** H5CX_get_vol_wrap_ctx((void **)&vol_wrap_ctx)
-**** vol_wrap_ctx->rc--; // How is there a refcount if each thread has its own ctx?
-**** H5VL__free_vol_wrapper
-***** H5VL__conn_dec_rc(vol_wrap_ctx->connector)
-****** =connector->nrefs--;= // Should this be atomic?
-****** H5I_dec_ref(connector->id)
-******* TODO
-* Implementation Tasks
-** TODO Avoid proliferation of conditional compilation
-*** h5_win32_threads.c
-*** h5_posix_threads.c
-** TODO Remove need for H5_INIT_GLOBAL and H5_TERM_GLOBAL macros
-** TODO Include a lock for each package init var (H5*_init_g)
-* Side Calls Requiring Global Lock
-** H5Dread
-*** H5I_object_verify
-    - TODO Global lock
-*** H5CX_set_dxpl
-    - This looks thread safe
-** H5VL_dataset_read
-*** H5VL_set_vol_wrapper
-    - TODO Global lock
-*** H5VL_reset_vol_wrapper
-    - TODO Global lock
-** H5VL__dataset_read
-   - DONE
-** H5VL__native_dataset_read
-*** H5S_get_validated_dataspace
-    - TODO Global lock
-*** H5S_get_validated_dataspace
-    - TODO Global lock
-** H5D__read
-*** H5S_get_select_npoints
-    - TODO Global lock
-*** H5D__typeinfo_init
-    - TODO Global lock
-*** H5S_get_select_npoints
-    - TODO Global lock
-*** H5S_has_extent
-    - TODO Global lock
-*** H5S_has_extent
-    - TODO Global lock
-*** H5S_select_shape_same
-    - TODO Global lock
-*** H5S_get_simple_extent_ndims
-    - TODO Global lock
-*** H5S_get_simple_extent_ndims
-    - TODO Global lock
-*** TODO Branch not covered: H5Dio.c:485
-*** H5D__contig_is_space_alloc
-    - TODO Global lock
-*** H5D__contig_is_data_cached
-    - TODO Global lock
-*** TODO Branch not covered: H5Dio.c:512
-*** H5D__ioinfo_init
-    - TODO Global lock
-*** H5D__contig_io_init
-    - TODO Global lock
-*** H5D__typeinfo_term
-    - TODO Global lock
-** H5D__contig_read
-   - DONE
-** H5D__select_read
-   - DONE
-** H5D__select_io
-*** H5CX_get_vec_size
-    - Thread safe
-*** TODO Branch not covered: H5Dselect.c:135
-*** H5S_select_iter_init
-    - TODO Global lock
-*** H5S_select_iter_init
-    - TODO Global lock
-*** TODO Branch not covered: H5Dselect.c:220
-*** H5S_select_iter_get_seq_list
-    - TODO Global lock
-*** H5S_select_iter_get_seq_list
-    - TODO Global lock
-*** H5S_select_iter_release
-    - TODO Global lock
-*** H5S_select_iter_release
-    - TODO Global lock
-** H5D__contig_readvv
-*** H5F_shared_has_feature
-    - TODO Global lock
-** H5VM_opvv
-** H5D__contig_readvv_sieve_cb
-*** TODO Branch not covered: H5Dcontig.c:756
-*** TODO Branch not covered: H5Dcontig.c:786
-** H5F_shared_block_read
-** H5PB_read
-*** TODO Branch not covered: H5PB.c:754 (skipped by HGOTO_DONE)
-** H5F__accum_read
-*** TODO Branch not covered: H5Faccum.c:130
-** H5FD_read
-*** dxpl_id = H5CX_get_dxpl();
-    - Thread safe
-*** H5FD_sec2_get_eoa
-    - TODO Global lock, assuming this isn't a bug
-** H5DF_sec2_read
-** pread
-* Shared Data in Main Path
-** H5Dread
-** H5VL_dataset_read(vol_obj, ...)
-** H5VL__dataset_read(vol_obj->data, vol_obj->connector->cls, ...)
-*** read vol_obj->connector->cls->dataset_cls.read
-** H5VL__native_dataset_read(vol_obj->data, ...)
-*** read vol_obj->data->oloc.file
-** H5D__read(vol_obj->data, ..., mem_space, file_space
-*** read vol_obj->data->oloc.addr
-*** file_space = mem_space = vol_obj->data->shared->space
-*** read vol_obj->data->shared->dcpl_cache.efl.nused
-*** read vol_obj->data->shared->layout.ops->is_space_alloc
-*** read vol_obj->data->shared->layout.storage
-*** read vol_obj->data->shared->layout.ops->is_data_cached
-*** io_info.u.rbuf = buf;
-*** io_info refers to several vol_obj->data members, set in H5D__ioinfo_init
-**** io_info->dset = dset;
-**** io_info->f_sh = H5F_SHARED(dset->oloc.file);
-**** io_info->layout_ops = *dset->shared->layout.ops;
-*** read io_info.layout_ops.io_init
-*** read io_info.layout_ops.io_term
-** H5D__contig_read(io_info, type_info, nelmts, file_spce, mem_space, fm)
-** H5D__select_read(io_info, type_info, nelmts, file_space, mem_space)
-** H5D__select_io(io_info, type_info->src_type_size, nelmts, file_spce, mem_space)
-*** read io_info->op_type
-*** read io_info->layout_ops.readvv
-** H5D__contig_readvv(io_info, ...)
-*** udata.f_sh = io_info->f_sh;
-*** udata.dset_contig = &(io_info->dset->shared->cache.contig);
-*** udata.store_contig = &(io_info->store->contig);
-*** udata.rbuf = (unsigned char *)io_info->u.rbuf;
-** H5VM_opvv(..., udata)
-** H5D__contig_readvv_sieve_cb(..., udata)
-*** H5F_shared_t *f_sh = udata->f_sh;
-*** H5D_rdcdc_t *dset_contig = udata->dset_contig;
-*** const H5D_contig_storage_t *store_contig = udata->store_contig;
-*** read dset_contig->sieve_buf
-*** read dset_contig->sieve_loc
-*** read dset_contig->sieve_size
-*** read store_contig->dset_addr
-*** buf = udata->rbuf + src_off;
-** H5F_shared_block_read(f_sh, ...)
-** H5PB_read(f_sh, ...)
-*** page_buf = f_sh->page_buf;
-** H5F__accum_read(f_sh, ...)
-*** file = f_sh->lf;
-** H5FD_read(file, ...)
-*** read file->access_flags
-*** read file->base_addr
-*** read file->cls->read
-** H5DF_sec2_read(file, ...)
-*** write file->pos = addr;
-*** write file->op = OP_READ;
-** pread(file->fd, ...)
+    - DONE
+*** H5VL__native_dataset_read
+**** H5S_get_validated_dataspace
+     - TODO Global lock
+**** H5S_get_validated_dataspace
+     - TODO Global lock
+*** H5D__read
+**** H5S_get_select_npoints
+     - TODO Global lock
+**** H5D__typeinfo_init
+     - TODO Global lock
+**** H5S_get_select_npoints
+     - TODO Global lock
+**** H5S_has_extent
+     - TODO Global lock
+**** H5S_has_extent
+     - TODO Global lock
+**** H5S_select_shape_same
+     - TODO Global lock
+**** H5S_get_simple_extent_ndims
+     - TODO Global lock
+**** H5S_get_simple_extent_ndims
+     - TODO Global lock
+**** TODO Branch not covered: H5Dio.c:485
+**** H5D__contig_is_space_alloc
+     - TODO Global lock
+**** H5D__contig_is_data_cached
+     - TODO Global lock
+**** TODO Branch not covered: H5Dio.c:512
+**** H5D__ioinfo_init
+     - TODO Global lock
+**** H5D__contig_io_init
+     - TODO Global lock
+**** H5D__typeinfo_term
+     - TODO Global lock
+*** H5D__contig_read
+    - DONE
+*** H5D__select_read
+    - DONE
+*** H5D__select_io
+**** H5CX_get_vec_size
+     - Thread safe
+**** TODO Branch not covered: H5Dselect.c:135
+**** H5S_select_iter_init
+     - TODO Global lock
+**** H5S_select_iter_init
+     - TODO Global lock
+**** TODO Branch not covered: H5Dselect.c:220
+**** H5S_select_iter_get_seq_list
+     - TODO Global lock
+**** H5S_select_iter_get_seq_list
+     - TODO Global lock
+**** H5S_select_iter_release
+     - TODO Global lock
+**** H5S_select_iter_release
+     - TODO Global lock
+*** H5D__contig_readvv
+**** H5F_shared_has_feature
+     - TODO Global lock
+*** H5VM_opvv
+*** H5D__contig_readvv_sieve_cb
+**** TODO Branch not covered: H5Dcontig.c:756
+**** TODO Branch not covered: H5Dcontig.c:786
+*** H5F_shared_block_read
+*** H5PB_read
+**** TODO Branch not covered: H5PB.c:754 (skipped by HGOTO_DONE)
+*** H5F__accum_read
+**** TODO Branch not covered: H5Faccum.c:130
+*** H5FD_read
+**** dxpl_id = H5CX_get_dxpl();
+     - Thread safe
+**** H5FD_sec2_get_eoa
+     - TODO Global lock, assuming this isn't a bug
+*** H5DF_sec2_read
+*** pread
+** Shared Data in Main Path
+*** H5Dread
+*** H5VL_dataset_read(vol_obj, ...)
+*** H5VL__dataset_read(vol_obj->data, vol_obj->connector->cls, ...)
+**** read vol_obj->connector->cls->dataset_cls.read
+*** H5VL__native_dataset_read(vol_obj->data, ...)
+**** read vol_obj->data->oloc.file
+*** H5D__read(vol_obj->data, ..., mem_space, file_space
+**** read vol_obj->data->oloc.addr
+**** file_space = mem_space = vol_obj->data->shared->space
+**** read vol_obj->data->shared->dcpl_cache.efl.nused
+**** read vol_obj->data->shared->layout.ops->is_space_alloc
+**** read vol_obj->data->shared->layout.storage
+**** read vol_obj->data->shared->layout.ops->is_data_cached
+**** io_info.u.rbuf = buf;
+**** io_info refers to several vol_obj->data members, set in H5D__ioinfo_init
+***** io_info->dset = dset;
+***** io_info->f_sh = H5F_SHARED(dset->oloc.file);
+***** io_info->layout_ops = *dset->shared->layout.ops;
+**** read io_info.layout_ops.io_init
+**** read io_info.layout_ops.io_term
+*** H5D__contig_read(io_info, type_info, nelmts, file_spce, mem_space, fm)
+*** H5D__select_read(io_info, type_info, nelmts, file_space, mem_space)
+*** H5D__select_io(io_info, type_info->src_type_size, nelmts, file_spce, mem_space)
+**** read io_info->op_type
+**** read io_info->layout_ops.readvv
+*** H5D__contig_readvv(io_info, ...)
+**** udata.f_sh = io_info->f_sh;
+**** udata.dset_contig = &(io_info->dset->shared->cache.contig);
+**** udata.store_contig = &(io_info->store->contig);
+**** udata.rbuf = (unsigned char *)io_info->u.rbuf;
+*** H5VM_opvv(..., udata)
+*** H5D__contig_readvv_sieve_cb(..., udata)
+**** H5F_shared_t *f_sh = udata->f_sh;
+**** H5D_rdcdc_t *dset_contig = udata->dset_contig;
+**** const H5D_contig_storage_t *store_contig = udata->store_contig;
+**** read dset_contig->sieve_buf
+**** read dset_contig->sieve_loc
+**** read dset_contig->sieve_size
+**** read store_contig->dset_addr
+**** buf = udata->rbuf + src_off;
+*** H5F_shared_block_read(f_sh, ...)
+*** H5PB_read(f_sh, ...)
+**** page_buf = f_sh->page_buf;
+*** H5F__accum_read(f_sh, ...)
+**** file = f_sh->lf;
+*** H5FD_read(file, ...)
+**** read file->access_flags
+**** read file->base_addr
+**** read file->cls->read
+*** H5DF_sec2_read(file, ...)
+**** write file->pos = addr;
+**** write file->op = OP_READ;
+*** pread(file->fd, ...)
 * H5Dopen2
 ** Side Calls
 *** H5Dopen2
@@ -527,17 +521,17 @@ int main (int argc, char* argv[])
 ************ H5C_protect(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata, ...)
              - cache_ptr = grp_loc.oloc->file->shared->cache
 ************* H5C_load_entry(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata)
-              START AT H5C.c:6597
-
+************** H5F_block_read(grp_loc.oloc->file, ..., grp_loc.oloc->addr, ...)
 *** H5D_open(loc, ...)
-    Start here!!
 **** TODO Branch not considered: 1599
 *** H5D__open_oid
 **** TODO Branch not considered: 1807
 **** TODO Branch not considered: 1853
 **** TODO Branch not considered: 1865
+* H5DClose
+** Side Calls
+** Shared Data in Main Path
 * Questions
-  - Focusing on H5Dopen2
+  - Why is USE_SANITIZER feature in cmake only supported for clang?
 * Issues
   - H5S__init_package is called from H5Dopen. All other packages are initialized in H5Fopen.
-
