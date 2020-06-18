@@ -163,15 +163,60 @@ double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_
   return total_seconds;
 }
 
-double open_read_and_close_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t> &dset_ids,
-                                      int num_threads, u64 **destinations) {
-  (void)file_id;
-  (void)dset_names;
-  (void)dset_ids;
-  (void)num_threads;
-  (void)destinations;
+void close_dataset(hid_t dset_id, const char *name) {
+  if (H5Dclose(dset_id) < 0) {
+    fprintf(stderr, "Failed to close dataset %s\n", name);
+  }
+}
 
-  return 0.0;
+double open_read_and_close_on_workers(hid_t file_id, const char **dset_names, int num_threads,
+                                      u64 **destinations) {
+  std::vector<std::thread> open_threads;
+  hid_t dset_ids[max_threads] = {};
+
+  fprintf(stderr, "Opens\n");
+  auto start = now();
+  for (int i = 0; i < num_threads; ++i) {
+    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i], true));
+  }
+
+  for (auto &t : open_threads) {
+    t.join();
+  }
+  auto end = now();
+  fprintf(stderr, "Parallel opens: %f s.\n",std::chrono::duration<double>(end - start).count());
+  std::vector<std::thread> read_threads;
+
+  fprintf(stderr, "Reads\n");
+  start = now();
+  for (int i = 0; i < num_threads; ++i) {
+    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], true));
+  }
+
+  for (auto &t : read_threads) {
+    t.join();
+  }
+
+  end = now();
+  double total_seconds = std::chrono::duration<double>(end - start).count();
+  fprintf(stderr, "Total seconds to read 8 datasets with %d threads: %f\n", num_threads, total_seconds);
+  printf("%f\n", total_seconds);
+
+  std::vector<std::thread> close_threads;
+
+  fprintf(stderr, "Closes\n");
+  start = now();
+  for (int i = 0; i < num_threads; ++i) {
+    close_threads.push_back(std::thread(close_dataset, dset_ids[i], dset_names[i]));
+  }
+
+  for (auto &t : close_threads) {
+    t.join();
+  }
+  end = now();
+  fprintf(stderr, "Parallel closes: %f s.\n",std::chrono::duration<double>(end - start).count());
+
+  return total_seconds;
 }
 
 void usage(const char *prog) {
@@ -252,7 +297,7 @@ int main (int argc, char* argv[]) {
   std::vector<hid_t> dset_ids(num_dsets);
 
   if ((work_split & open_on_workers) && (work_split & close_on_workers)) {
-    open_read_and_close_on_workers(file_id, dset_names, dset_ids, num_threads, destinations);
+    open_read_and_close_on_workers(file_id, dset_names, num_threads, destinations);
   } else if (work_split & open_on_workers) {
     open_and_read_on_workers(file_id, dset_names, num_threads, destinations);
   } else {
