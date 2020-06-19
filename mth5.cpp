@@ -13,6 +13,9 @@
 #include "hdf5.h"
 #include "ittnotify.h"
 
+
+#define ARRAY_COUNT(arr) (sizeof((arr)) / sizeof((arr)[0]))
+
 typedef uint32_t u32;
 typedef uint64_t u64;
 
@@ -154,6 +157,8 @@ double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_
 void close_dataset(hid_t dset_id, const char *name) {
   if (H5Dclose(dset_id) < 0) {
     fprintf(stderr, "Failed to close dataset %s\n", name);
+  } else {
+    fprintf(stdout, "Closed %s\n", name);
   }
 }
 
@@ -208,9 +213,10 @@ double open_read_and_close_on_workers(hid_t file_id, const char **dset_names, in
 }
 
 void usage(const char *prog) {
-  fprintf(stderr, "Usage: %s -f file_name [-t num_threads] [-o,-c]\n", prog);
+  fprintf(stderr, "Usage: %s -f file_name [-t num_threads] [-o,-c,-s]\n", prog);
   fprintf(stderr, "    -o: Open datasets in the worker threads\n");
   fprintf(stderr, "    -c: Close datasets in the worker threads\n");
+  fprintf(stderr, "    -s: Skip verification of results\n");
   exit(1);
 }
 
@@ -227,8 +233,9 @@ int main (int argc, char* argv[]) {
   int num_threads = 1;
   char *file_name = 0;
   u32 work_split = 0;
+  bool verify_results = true;
 
-  while ((option = getopt(argc, argv, "cf:ot:")) != -1) {
+  while ((option = getopt(argc, argv, "cf:ost:")) != -1) {
     switch (option) {
       case 'c': {
         work_split |= close_on_workers;
@@ -240,6 +247,10 @@ int main (int argc, char* argv[]) {
       }
       case 'o': {
         work_split |= open_on_workers;
+        break;
+      }
+      case 's': {
+        verify_results = false;
         break;
       }
       case 't': {
@@ -294,12 +305,14 @@ int main (int argc, char* argv[]) {
 
   __itt_pause();
 
-  fprintf(stderr, "Verifying results\n");
-  for (int i = 0; i < num_threads; ++i) {
-    u64 counter = 0;
-    u64 *current_dset = destinations[i];
-    for (int j = 0; j < dset_size; ++j) {
-      assert(current_dset[j] == counter++);
+  if (verify_results) {
+    fprintf(stderr, "Verifying results\n");
+    for (int i = 0; i < num_threads; ++i) {
+      u64 counter = 0;
+      u64 *current_dset = destinations[i];
+      for (int j = 0; j < dset_size; ++j) {
+        assert(current_dset[j] == counter++);
+      }
     }
   }
   fprintf(stderr, "Success.\n");
