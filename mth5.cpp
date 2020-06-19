@@ -11,8 +11,7 @@
 #include <vector>
 
 #include "hdf5.h"
-
-#define ARRAY_COUNT(arr) (sizeof((arr)) / sizeof((arr)[0]))
+#include "ittnotify.h"
 
 typedef uint32_t u32;
 typedef uint64_t u64;
@@ -22,41 +21,34 @@ extern int H5S_init_g;
 const auto now = std::chrono::high_resolution_clock::now;
 const int max_threads = 8;
 
-struct Barrier {
-  int wait_count;
-  int target_wait_count;
-  std::mutex mtx;
-  std::condition_variable cond_var;
+// struct Barrier {
+//   int wait_count;
+//   int target_wait_count;
+//   std::mutex mtx;
+//   std::condition_variable cond_var;
 
-  Barrier() {};
+//   Barrier() {};
 
-  void wait() {
-    std::unique_lock<std::mutex> lk(mtx);
-    ++wait_count;
-    if(wait_count != target_wait_count) {
-      // not all threads have arrived yet; go to sleep until they do
-      cond_var.wait(lk, [this]() { return wait_count == target_wait_count; });
-    } else {
-      // we are the last thread to arrive; wake the others and go on
-      cond_var.notify_all();
-    }
-    // note that if you want to reuse the barrier, you will have to
-    // reset wait_count to 0 now before calling wait again
-    // if you do this, be aware that the reset must be synchronized with
-    // threads that are still stuck in the wait
-  }
-};
+//   void wait() {
+//     std::unique_lock<std::mutex> lk(mtx);
+//     ++wait_count;
+//     if(wait_count != target_wait_count) {
+//       // not all threads have arrived yet; go to sleep until they do
+//       cond_var.wait(lk, [this]() { return wait_count == target_wait_count; });
+//     } else {
+//       // we are the last thread to arrive; wake the others and go on
+//       cond_var.notify_all();
+//     }
+//     // note that if you want to reuse the barrier, you will have to
+//     // reset wait_count to 0 now before calling wait again
+//     // if you do this, be aware that the reset must be synchronized with
+//     // threads that are still stuck in the wait
+//   }
+// };
 
-Barrier open_barrier;
-Barrier read_barrier;
-Barrier close_barrier;
-
-void read_dataset(hid_t dset_id, const char *dset_name, void *dest, bool barrier) {
+void read_dataset(hid_t dset_id, const char *dset_name, void *dest) {
   assert(H5Dread(dset_id, H5T_STD_I64LE, H5S_ALL, H5S_ALL, H5P_DEFAULT, dest) >= 0);
   fprintf(stderr, "Read dataset %s\n", dset_name);
-  if (barrier) {
-    read_barrier.wait();
-  }
 }
 
 double read_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t> &dset_ids,
@@ -79,20 +71,19 @@ double read_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t
   if (num_threads == 1) {
     start = now();
     for (size_t i = 0; i < num_dsets; ++i) {
-      read_dataset(dset_ids[i], dset_names[i], destinations[i], false);
+      read_dataset(dset_ids[i], dset_names[i], destinations[i]);
     }
     end = now();
   } else {
     std::thread threads[max_threads];
     start = now();
     for (int i = 1; i < num_threads; ++i) {
-      // int j = i % ARRAY_COUNT(dset_names);
-      threads[i] = std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], false);
+      threads[i] = std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i]);
       fprintf(stderr, "Queued dataset %s\n", dset_names[i]);
     }
 
     fprintf(stderr, "Queued dataset %s\n", dset_names[0]);
-    read_dataset(dset_ids[0], dset_names[0], destinations[0], false);
+    read_dataset(dset_ids[0], dset_names[0], destinations[0]);
     for (int i = 1; i < num_threads; ++i) {
       threads[i].join();
     }
@@ -111,14 +102,11 @@ double read_on_workers(hid_t file_id, const char **dset_names, std::vector<hid_t
   return total_seconds;
 }
 
-void open_dataset(hid_t file_id, const char *dset_name, hid_t *dset_id, bool barrier) {
+void open_dataset(hid_t file_id, const char *dset_name, hid_t *dset_id) {
   hid_t id = H5Dopen(file_id, dset_name, H5P_DEFAULT);
   assert(id >= 0);
   *dset_id = id;
   fprintf(stdout, "Opened %s\n", dset_name);
-  if (barrier) {
-    open_barrier.wait();
-  }
 }
 
 double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_threads,
@@ -129,7 +117,7 @@ double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_
   fprintf(stderr, "Opens\n");
   auto start = now();
   for (int i = 0; i < num_threads; ++i) {
-    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i], true));
+    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i]));
   }
 
   for (auto &t : open_threads) {
@@ -142,7 +130,7 @@ double open_and_read_on_workers(hid_t file_id, const char **dset_names, int num_
   fprintf(stderr, "Reads\n");
   start = now();
   for (int i = 0; i < num_threads; ++i) {
-    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], true));
+    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i]));
   }
 
   for (auto &t : read_threads) {
@@ -177,7 +165,7 @@ double open_read_and_close_on_workers(hid_t file_id, const char **dset_names, in
   fprintf(stderr, "Opens\n");
   auto start = now();
   for (int i = 0; i < num_threads; ++i) {
-    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i], true));
+    open_threads.push_back(std::thread(open_dataset, file_id, dset_names[i], &dset_ids[i]));
   }
 
   for (auto &t : open_threads) {
@@ -190,7 +178,7 @@ double open_read_and_close_on_workers(hid_t file_id, const char **dset_names, in
   fprintf(stderr, "Reads\n");
   start = now();
   for (int i = 0; i < num_threads; ++i) {
-    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i], true));
+    read_threads.push_back(std::thread(read_dataset, dset_ids[i], dset_names[i], destinations[i]));
   }
 
   for (auto &t : read_threads) {
@@ -280,10 +268,6 @@ int main (int argc, char* argv[]) {
   u64 *g = (u64 *)malloc(dset_size * sizeof(u64));
   u64 *h = (u64 *)malloc(dset_size * sizeof(u64));
 
-  open_barrier.target_wait_count = num_threads;
-  read_barrier.target_wait_count = num_threads;
-  close_barrier.target_wait_count = num_threads;
-
   hid_t file_id = H5Fopen(file_name, H5F_ACC_RDONLY, H5P_DEFAULT);
   assert(file_id >= 0 && "Failed to open file");
   // NOTE(chogan): Normally this gets initialized in H5Dopen. Do it here so all
@@ -307,6 +291,8 @@ int main (int argc, char* argv[]) {
   if (H5Fclose(file_id) < 0) {
     fprintf(stderr, "Failed to close file\n");
   }
+
+  __itt_pause();
 
   fprintf(stderr, "Verifying results\n");
   for (int i = 0; i < num_threads; ++i) {
