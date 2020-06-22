@@ -73,10 +73,11 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
   std::vector<std::thread> threads;
   const size_t num_dsets = dset_ids.size();
 
-  auto read_func = [&dset_ids, &dset_names, &dests](int dset_index) {
-    assert(H5Dread(dset_ids[dset_index], H5T_STD_I64LE, H5S_ALL, H5S_ALL, H5P_DEFAULT,
-                   dests[dset_index]) >= 0);
-    fprintf(stderr, "Read dataset %s\n", dset_names[dset_index]);
+  auto read_func = [&dset_ids, &dset_names](int dset_index, hid_t mspace_id, hid_t fspace_id,
+                                            u64 *dest, int elems_read) {
+    assert(H5Dread(dset_ids[dset_index], H5T_STD_I64LE, mspace_id, fspace_id, H5P_DEFAULT, dest) >= 0);
+    fprintf(stderr, "Read %zu of %d elements from dataset %s\n", (size_t)elems_read, dset_size,
+            dset_names[dset_index]);
   };
 
   auto start = now();
@@ -85,14 +86,50 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
   if (do_on_worker) {
     if (num_threads != (int)num_dsets) {
       assert(num_dsets == 1);
-      start = now();
-      // TODO(chogan): Need offset and length for each read
-      end = now();
-    } else {
-      // Each thread reads a whole dataset
+      // NOTE(chogan): Main thread sets up dataspaces for partial reads
+      std::vector<hid_t> dspaces;
+      hsize_t offset = 0;
+      const hsize_t stride = 1;
+      const hsize_t count = dset_size / num_threads;
+      const hsize_t block = 1;
+
+      hid_t mspace = H5Screate_simple(1, &count, NULL);
+      assert(mspace >= 0);
+
+      for (int i = 0; i < num_threads; ++i) {
+        hid_t dspace = H5Dget_space(dset_ids[0]);
+        assert(dspace >= 0);
+        assert(H5Sselect_hyperslab(dspace, H5S_SELECT_SET, &offset, &stride, &count, &block) >= 0);
+        dspaces.push_back(dspace);
+
+        hssize_t dspace_elems = H5Sget_select_npoints(dspace);
+        hssize_t mspace_elems = H5Sget_select_npoints(mspace);
+        assert(dspace_elems == mspace_elems);
+
+        offset += count;
+      }
+
+      // NOTE(chogan): Each thread reads num_bytes / num_threads bytes
       start = now();
       for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(read_func, i));
+        size_t dest_offset = i * count;
+        threads.push_back(std::thread(read_func, 0, mspace, dspaces[i], dests[0] + dest_offset, count));
+      }
+
+      for (int i = 0; i < num_threads; ++i) {
+        threads[i].join();
+      }
+      end = now();
+
+      for (int i = 0; i < num_threads; ++i) {
+        assert(H5Sclose(dspaces[i]) >= 0);
+      }
+      assert(H5Sclose(mspace) >= 0);
+    } else {
+      // NOTE(chogan): Each thread reads a whole dataset
+      start = now();
+      for (int i = 0; i < num_threads; ++i) {
+        threads.push_back(std::thread(read_func, i, H5S_ALL, H5S_ALL, dests[i], dset_size));
       }
 
       for (int i = 0; i < num_threads; ++i) {
@@ -103,7 +140,7 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
   } else {
     start = now();
     for (size_t i = 0; i < num_dsets; ++i) {
-      read_func(i);
+      read_func(i, H5S_ALL, H5S_ALL, dests[i], dset_size);
     }
     end = now();
   }
@@ -214,6 +251,7 @@ int main (int argc, char* argv[]) {
   }
 
   assert((num_threads == num_dsets || num_threads == 1 || num_dsets == 1) && "Invalid configuration");
+  assert(dset_size % num_threads == 0);
 
   u64 *a = (u64 *)malloc(dset_size * sizeof(u64));
   u64 *b = (u64 *)malloc(dset_size * sizeof(u64));
