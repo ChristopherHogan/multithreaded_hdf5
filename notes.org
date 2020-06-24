@@ -438,6 +438,7 @@ int main (int argc, char* argv[])
 *** H5Dopen2
 **** H5CX_set_apl
 **** H5I_object
+**** H5I_get_type - already thread safe (if -DNDEBUG)
 **** H5VL_register
 *** H5VL_dataset_open
 **** H5VL_set_vol_wrapper
@@ -477,18 +478,24 @@ int main (int argc, char* argv[])
 **** H5AC_tag
 ** Shared Data in Main Path
 *** H5Dopen2
-**** write vol_obj
-**** write loc_params
-**** write dset
+**** vol_obj = H5I_id_type_list_g[H5I_FILE]->ids->[some H5SL node]->item->obj_ptr
+     - We shouldn't be mutating the =ids= skip list unless we open or close a
+       file in a different thread
+     - When can H5I_id_type_list_g[H5I_FILE]->last_info change? If a different
+       file id is looked up. With only one open file, this shouldn't be a problem.
+**** loc_params.type = H5VL_OBJECT_BY_SELF
+**** loc_params.obj_type = H5I_FILE
+**** dset = NULL
+**** ret_value = H5I_INVALID_HID
 *** H5VL_dataset_open(vol_obj, loc_params, ...)
 *** H5VL__dataset_open(vol_obj->data, loc_params, vol_obj->connector->cls, ...)
-**** read vol_obj->connector->cls
+**** read vol_obj->connector->cls->dataset_cls.open
 *** H5VL__native_dataset_open(vol_obj->data, loc_params, ...)
     - loc
     - loc.oloc = vol_obj->data->shared->root_grp->oloc
     - loc.oloc.file = vol_obj->data
     - loc.path = vol_obj->data->shared->root_grp->path
-*** H5D__open_name(loc, ...)
+*** H5D__open_name(&loc, ...)
     - dset_loc
     - path
     - oloc
@@ -499,31 +506,43 @@ int main (int argc, char* argv[])
      - udata.loc = dset_loc
 ***** H5G_traverse(loc, ..., &udata)
 ****** H5G__traverse_real(loc, ..., udata)
-       - _loc
-       - _loc.oloc = loc->oloc
-       - _loc.path = loc->path
-       - grp_loc = _loc
-       - obj_loc = {}
+       - grp_oloc
+       - grp_path
+       - obj_loc
+       - obj_oloc
+       - obj_path
+       - grp_loc.oloc = &grp_oloc
+       - grp_loc.path = &grp_path
+       - obj_loc.oloc = &obj_oloc
+       - obj_loc.path = &obj_path
+       - grp_loc.oloc = loc.oloc
+       - grp_loc.path = loc.path
 ******* H5G__obj_lookup(grp_loc.oloc, ...)
-******** read grp_loc.oloc.addr
-******* H5G__obj_get_linfo(grp_loc.oloc, ...)
-******** read grp_loc.oloc.addr
-******** H5O_msg_exists(grp_loc.oloc, ...)
-********* read grp_loc.oloc.addr
+******** H5G__obj_get_linfo(grp_loc.oloc, ...)
+********* H5O_msg_exists(grp_loc.oloc, ...)
 ********** H5O_protect(grp_loc.oloc, ...)
-*********** read grp_loc.oloc.addr
-            - file_intent = grp_loc.oloc->file->shared->flags
             - udata
             - udata.common.f = grp_loc.oloc->file
             - udata.common.addr = grp_loc.oloc->addr
+************ read grp_loc.oloc->file->shared->flags
 *********** H5AC_protect(grp_loc.oloc->file, ..., grp_loc.oloc->addr, &udata, ...)
 ************ read grp_loc.oloc->file->shared->flags
 ************ H5C_protect(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata, ...)
              - cache_ptr = grp_loc.oloc->file->shared->cache
+************* H5C__SEARCH_INDEX(cache_ptr, addr, ...)
+************** read and potentially write cache_ptr->index linked lists
+************* write cache_ptr->entries_loaded_counter
+************* write cache_ptr->index[entry]->ring
 ************* H5C_load_entry(grp_loc.oloc->file, ..., grp_loc.oloc->addr, udata)
+************** read grp_loc.oloc->file->shared->read_attempts
 ************** H5F_block_read(grp_loc.oloc->file, ..., grp_loc.oloc->addr, ...)
-*** H5D_open(loc, ...)
-**** TODO Branch not considered: 1599
+*************** read grp_loc.oloc->file->shared->tmp_addr
+*** H5D_open(dset_loc, ...)
+    - dataset->oloc = dset_loc.oloc
+    - dataset->path = dset_loc.path
+**** write dataset->shared->fo_count
+**** write dataset->shared->extfile_prefix
+**** write dataset->shared->vds_prefix
 *** H5D__open_oid
 **** TODO Branch not considered: 1807
 **** TODO Branch not considered: 1853
@@ -598,5 +617,6 @@ int main (int argc, char* argv[])
 * Questions
   - Why is USE_SANITIZER feature in cmake only supported for clang?
   - What is a "corked" dataset?
+  - What is meant by "atom"
 * Issues
   - H5S__init_package is called from H5Dopen. All other packages are initialized in H5Fopen.
