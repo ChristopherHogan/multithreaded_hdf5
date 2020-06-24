@@ -36,30 +36,45 @@ void open_datasets(hid_t file_id, std::vector<hid_t> &dset_ids, const char **dse
   std::vector<std::thread> threads;
   const size_t num_dsets = dset_ids.size();
 
-  auto open_func = [file_id, dset_names, &dset_ids](int dset_index) {
-    hid_t id = H5Dopen(file_id, dset_names[dset_index], H5P_DEFAULT);
+  auto open_func = [file_id, dset_names, &dset_ids](int name_index, int id_index) {
+    hid_t id = H5Dopen(file_id, dset_names[name_index], H5P_DEFAULT);
     assert(id >= 0);
-    dset_ids[dset_index] = id;
-    fprintf(stdout, "Opened %s\n", dset_names[dset_index]);
+    dset_ids[id_index] = id;
+    fprintf(stdout, "Opened %s\n", dset_names[name_index]);
   };
 
   auto start = now();
   auto end = now();
 
   if (do_on_worker) {
-    start = now();
-    for (int i = 0; i < num_threads; ++i) {
-      threads.push_back(std::thread(open_func, i));
-    }
+    if (num_threads != (int)num_dsets) {
+      assert(num_dsets == 1);
+      // NOTE(chogan): Each thread opens the same dataset
+      start = now();
+      for (int i = 0; i < num_threads; ++i) {
+        threads.push_back(std::thread(open_func, 0, i));
+      }
 
-    for (int i = 0; i < num_threads; ++i) {
-      threads[i].join();
+      for (int i = 0; i < num_threads; ++i) {
+        threads[i].join();
+      }
+      end = now();
+    } else {
+      // NOTE(chogan): Each thread opens a different dataset
+      start = now();
+      for (int i = 0; i < num_threads; ++i) {
+        threads.push_back(std::thread(open_func, i, i));
+      }
+
+      for (int i = 0; i < num_threads; ++i) {
+        threads[i].join();
+      }
+      end = now();
     }
-    end = now();
   } else {
     start = now();
     for (size_t i = 0; i < num_dsets; ++i) {
-      open_func(i);
+      open_func(i, i);
     }
     end = now();
   }
@@ -97,7 +112,7 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
       assert(mspace >= 0);
 
       for (int i = 0; i < num_threads; ++i) {
-        hid_t dspace = H5Dget_space(dset_ids[0]);
+        hid_t dspace = H5Dget_space(dset_ids[i]);
         assert(dspace >= 0);
         assert(H5Sselect_hyperslab(dspace, H5S_SELECT_SET, &offset, &stride, &count, &block) >= 0);
         dspaces.push_back(dspace);
@@ -113,7 +128,7 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
       start = now();
       for (int i = 0; i < num_threads; ++i) {
         size_t dest_offset = i * count;
-        threads.push_back(std::thread(read_func, 0, mspace, dspaces[i], dests[0] + dest_offset, count));
+        threads.push_back(std::thread(read_func, i, mspace, dspaces[i], dests[0] + dest_offset, count));
       }
 
       for (int i = 0; i < num_threads; ++i) {
@@ -138,6 +153,7 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
       end = now();
     }
   } else {
+    // NOTE(chogan): One thread reads all datasets
     start = now();
     for (size_t i = 0; i < num_dsets; ++i) {
       read_func(i, H5S_ALL, H5S_ALL, dests[i], dset_size);
@@ -250,6 +266,7 @@ int main (int argc, char* argv[]) {
     usage(argv[0]);
   }
 
+  assert(file_name);
   assert((num_threads == num_dsets || num_threads == 1 || num_dsets == 1) && "Invalid configuration");
   assert(dset_size % num_threads == 0);
 
@@ -281,6 +298,8 @@ int main (int argc, char* argv[]) {
     fprintf(stderr, "Failed to close file\n");
   }
 
+  // NOTE(chogan): Stop vtune collection so the computationally expensive
+  // verification isn't added to the profile
   // __itt_pause();
 
   if (verify_results) {
