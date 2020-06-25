@@ -15,26 +15,21 @@
 
 #define ARRAY_COUNT(arr) (sizeof((arr)) / sizeof((arr)[0]))
 
+extern int H5S_init_g;
+herr_t H5S__init_package();
+
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-herr_t H5S__init_package();
-extern int H5S_init_g;
 const auto now = std::chrono::high_resolution_clock::now;
 const int max_threads = 8;
 const int max_dsets = 8;
 const int dset_size = 64 * 1024 * 1024;
 
-// Flags for assigning work
-const u32 open_on_workers = 0x1;
-const u32 read_on_workers = 0x2;
-const u32 close_on_workers = 0x4;
-
 
 void open_datasets(hid_t file_id, std::vector<hid_t> &dset_ids, const char **dset_names,
-                   int num_threads, bool do_on_worker) {
+                   int num_dsets, int num_threads, bool do_on_worker) {
   std::vector<std::thread> threads;
-  const size_t num_dsets = dset_ids.size();
 
   auto open_func = [file_id, dset_names, &dset_ids](int name_index, int id_index) {
     hid_t id = H5Dopen(file_id, dset_names[name_index], H5P_DEFAULT);
@@ -49,50 +44,40 @@ void open_datasets(hid_t file_id, std::vector<hid_t> &dset_ids, const char **dse
   if (do_on_worker) {
     if (num_threads != (int)num_dsets) {
       assert(num_dsets == 1);
-      // NOTE(chogan): Each thread opens the same dataset
-      start = now();
-      for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(open_func, 0, i));
-      }
-
-      for (int i = 0; i < num_threads; ++i) {
-        threads[i].join();
-      }
-      end = now();
-    } else {
-      // NOTE(chogan): Each thread opens a different dataset
-      start = now();
-      for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(open_func, i, i));
-      }
-
-      for (int i = 0; i < num_threads; ++i) {
-        threads[i].join();
-      }
-      end = now();
     }
+    start = now();
+    for (int i = 0; i < num_threads; ++i) {
+      // NOTE(chogan): If we only have 1 dataset, then we open the first name,
+      // otherwise we open the ith name
+      int name_index = num_dsets == 1 ? 0 : i;
+      threads.push_back(std::thread(open_func, name_index, i));
+    }
+
+    for (int i = 0; i < num_threads; ++i) {
+      threads[i].join();
+    }
+    end = now();
   } else {
     start = now();
-    for (size_t i = 0; i < num_dsets; ++i) {
+    for (int i = 0; i < num_dsets; ++i) {
       open_func(i, i);
     }
     end = now();
   }
   double total_seconds = std::chrono::duration<double>(end - start).count();
-  fprintf(stderr, "Total seconds to open %zu datasets with %d threads: %f\n", num_dsets, num_threads,
-          total_seconds);
+  fprintf(stderr, "Total seconds to open %d datasets with %d threads: %f\n", num_dsets,
+          do_on_worker ? num_threads : 1, total_seconds);
 }
 
-void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
+void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names, int num_dsets,
                    u64 **dests, int num_threads, bool do_on_worker) {
   std::vector<std::thread> threads;
-  const size_t num_dsets = dset_ids.size();
 
-  auto read_func = [&dset_ids, &dset_names](int dset_index, hid_t mspace_id, hid_t fspace_id,
-                                            u64 *dest, int elems_read) {
+  auto read_func = [&dset_ids, &dset_names](int dset_index, int name_index, hid_t mspace_id,
+                                            hid_t fspace_id, u64 *dest, int elems_read) {
     assert(H5Dread(dset_ids[dset_index], H5T_STD_I64LE, mspace_id, fspace_id, H5P_DEFAULT, dest) >= 0);
     fprintf(stderr, "Read %zu of %d elements from dataset %s\n", (size_t)elems_read, dset_size,
-            dset_names[dset_index]);
+            dset_names[name_index]);
   };
 
   auto start = now();
@@ -128,7 +113,9 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
       start = now();
       for (int i = 0; i < num_threads; ++i) {
         size_t dest_offset = i * count;
-        threads.push_back(std::thread(read_func, i, mspace, dspaces[i], dests[0] + dest_offset, count));
+        int name_index = num_dsets == 1 ? 0 : i;
+        threads.push_back(std::thread(read_func, i, name_index, mspace, dspaces[i],
+                                      dests[0] + dest_offset, count));
       }
 
       for (int i = 0; i < num_threads; ++i) {
@@ -144,7 +131,7 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
       // NOTE(chogan): Each thread reads a whole dataset
       start = now();
       for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(read_func, i, H5S_ALL, H5S_ALL, dests[i], dset_size));
+        threads.push_back(std::thread(read_func, i, i, H5S_ALL, H5S_ALL, dests[i], dset_size));
       }
 
       for (int i = 0; i < num_threads; ++i) {
@@ -155,34 +142,38 @@ void read_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
   } else {
     // NOTE(chogan): One thread reads all datasets
     start = now();
-    for (size_t i = 0; i < num_dsets; ++i) {
-      read_func(i, H5S_ALL, H5S_ALL, dests[i], dset_size);
+    for (int i = 0; i < num_dsets; ++i) {
+      read_func(i, i, H5S_ALL, H5S_ALL, dests[i], dset_size);
     }
     end = now();
   }
 
   double total_seconds = std::chrono::duration<double>(end - start).count();
-  fprintf(stderr, "Total seconds to read %zu datasets with %d threads: %f\n", num_dsets, num_threads,
-          total_seconds);
+  fprintf(stderr, "Total seconds to read %d datasets with %d threads: %f\n", num_dsets,
+          do_on_worker ? num_threads : 1, total_seconds);
 }
 
-void close_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names, int num_threads,
-                    bool do_on_worker) {
+void close_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names, int num_dsets,
+                    int num_threads, bool do_on_worker) {
   std::vector<std::thread> threads;
-  const size_t num_dsets = dset_ids.size();
 
-  auto close_func = [&dset_ids, &dset_names](int dset_index) {
+  auto close_func = [&dset_ids, &dset_names](int dset_index, int name_index) {
     assert(H5Dclose(dset_ids[dset_index]) >= 0);
-    fprintf(stdout, "Closed %s\n", dset_names[dset_index]);
+    fprintf(stdout, "Closed %s\n", dset_names[name_index]);
   };
 
   auto start = now();
   auto end = now();
 
   if (do_on_worker) {
+    if (num_threads != num_dsets) {
+      assert(num_dsets == 1);
+    }
+
     start = now();
     for (int i = 0; i < num_threads; ++i) {
-      threads.push_back(std::thread(close_func, i));
+      int name_index = num_dsets == 1 ? 0 : i;
+      threads.push_back(std::thread(close_func, i, name_index));
     }
 
     for (int i = 0; i < num_threads; ++i) {
@@ -191,15 +182,16 @@ void close_datasets(const std::vector<hid_t> &dset_ids, const char **dset_names,
     end = now();
   } else {
     start = now();
-    for (size_t i = 0; i < num_dsets; ++i) {
-      close_func(i);
+    for (size_t i = 0; i < dset_ids.size(); ++i) {
+      int name_index = num_dsets == 1 ? 0 : i;
+      close_func(i, name_index);
     }
     end = now();
   }
 
   double total_seconds = std::chrono::duration<double>(end - start).count();
-  fprintf(stderr, "Total seconds to close %zu datasets with %d threads: %f\n", num_dsets, num_threads,
-          total_seconds);
+  fprintf(stderr, "Total seconds to close %d datasets with %d threads: %f\n", num_dsets,
+          do_on_worker ? num_threads : 1, total_seconds);
 }
 
 void usage(const char *prog) {
@@ -221,13 +213,15 @@ int main (int argc, char* argv[]) {
   int num_threads = 1;
   int num_dsets = 8;
   char *file_name = 0;
-  u32 work_split = 0;
   bool verify_results = true;
+  bool open_on_workers = false;
+  bool read_on_workers = false;
+  bool close_on_workers = false;
 
   while ((option = getopt(argc, argv, "cd:f:orst:")) != -1) {
     switch (option) {
       case 'c': {
-        work_split |= close_on_workers;
+        close_on_workers = true;
         break;
       }
       case 'd': {
@@ -240,11 +234,11 @@ int main (int argc, char* argv[]) {
         break;
       }
       case 'o': {
-        work_split |= open_on_workers;
+        open_on_workers = true;
         break;
       }
       case 'r': {
-        work_split |= read_on_workers;
+        read_on_workers = true;
         break;
       }
       case 's': {
@@ -268,7 +262,9 @@ int main (int argc, char* argv[]) {
 
   assert(file_name);
   assert((num_threads == num_dsets || num_threads == 1 || num_dsets == 1) && "Invalid configuration");
-  assert(dset_size % num_threads == 0);
+  if (num_dsets == 1) {
+    assert(dset_size % num_threads == 0);
+  }
 
   u64 *a = (u64 *)malloc(dset_size * sizeof(u64));
   u64 *b = (u64 *)malloc(dset_size * sizeof(u64));
@@ -288,11 +284,12 @@ int main (int argc, char* argv[]) {
 
   const char *dset_names[] = {"a", "b", "c", "d", "e", "f", "g", "h"};
   u64 *destinations[] = {a, b, c, d, e, f, g, h};
-  std::vector<hid_t> dset_ids(num_dsets);
+  const int num_ids = num_threads == 1 ? num_dsets : num_threads;
+  std::vector<hid_t> dset_ids(num_ids);
 
-  open_datasets(file_id, dset_ids, dset_names, num_threads, work_split & open_on_workers);
-  read_datasets(dset_ids, dset_names, destinations, num_threads, work_split & read_on_workers);
-  close_datasets(dset_ids, dset_names, num_threads, work_split & close_on_workers);
+  open_datasets(file_id, dset_ids, dset_names, num_dsets, num_threads, open_on_workers);
+  read_datasets(dset_ids, dset_names, num_dsets, destinations, num_threads, read_on_workers);
+  close_datasets(dset_ids, dset_names, num_dsets, num_threads, close_on_workers);
 
   if (H5Fclose(file_id) < 0) {
     fprintf(stderr, "Failed to close file\n");
