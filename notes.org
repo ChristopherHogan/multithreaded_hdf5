@@ -433,6 +433,56 @@ int main (int argc, char* argv[])
 **** write file->pos = addr;
 **** write file->op = OP_READ;
 *** pread(file->fd, ...)
+* H5Dwrite
+** Side calls
+*** H5Dwrite
+**** DONE H5I_object_verify
+**** DONE H5CX_set_dxpl
+*** H5VL_dataset_write
+**** DONE H5VL_set_vol_wrapper
+**** DONE H5VL_reset_vol_wrapper
+*** H5VL__dataset_write
+*** H5VL__native_dataset_write
+**** DONE H5S_get_validated_dataspace
+*** H5D__write
+**** DONE H5D__typeinfo_init
+**** DONE H5S_get_select_npoints
+**** DONE H5S_has_extent
+**** DONE H5S_select_shape_same
+**** DONE H5S_get_extent_ndims
+**** DONE H5D__ioinfo_init
+**** DONE H5D__contig_is_space_alloc
+**** DONE H5S_get_extent_npoints
+**** DONE H5T_detect_class
+**** DONE H5D__alloc_storage
+**** DONE H5D__contig_io_init
+**** DONE H5D__typeinfo_term
+*** H5D__contig_write
+*** H5D__select_write
+*** H5D__select_io
+**** DONE H5CX_get_vec_size
+**** DONE H5S_select_iter_init
+**** DONE H5S_select_iter_get_seq_list
+**** DONE H5S_select_iter_release
+*** H5D__contig_writevv
+*** H5VM_opvv
+*** H5D__contig_writevv_sieve_cb
+*** H5F_shared_block_write
+*** H5PB_write
+*** H5F__accum_write
+*** H5FD_write
+**** DONE H5CX_get_dxpl
+**** DONE H5FD_sec2_get_eoa
+*** H5FD_sec2_write
+*** pwrite
+** Shared in main path
+*** H5Dwrite
+**** vol_obj
+*** H5D__write
+    - filespace = dataset->shared->space
+    - memspace = dataset->shared->space
+**** read dataset->shared->checked_filters
+**** H5FD_sec2.c:852 - Lock file access
 * H5Dopen2
 ** Side Calls
 *** H5Dopen2
@@ -540,6 +590,7 @@ int main (int argc, char* argv[])
 *** H5D_open(dset_loc, ...)
     - dataset->oloc = dset_loc.oloc
     - dataset->path = dset_loc.path
+**** read and write dataset->shared
 **** write dataset->shared->fo_count
 **** write dataset->shared->extfile_prefix
 **** write dataset->shared->vds_prefix
