@@ -1,0 +1,5420 @@
+# callgrind format
+version: 1
+creator: callgrind-3.15.0
+pid: 87046
+cmd:  ./mth5 -w out.h5 -t 1 -d 1
+part: 1
+
+
+desc: I1 cache: 
+desc: D1 cache: 
+desc: LL cache: 
+
+desc: Timerange: Basic block 0 - 607333923
+desc: Trigger: Program termination
+
+positions: line
+events: Ir
+summary: 31178
+
+
+ob=(2) ???
+fl=(18) ???
+fn=(1090) 0x000000000488f160
+0 10
+cob=(3) /usr/lib/x86_64-linux-gnu/libc-2.31.so
+cfi=(201) /build/glibc-YYA7BZ/glibc-2.31/string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+cfn=(968) __memcpy_avx_unaligned_erms
+calls=1527 225 
+0 65
+
+fn=(2126) 0x000000000488ee20
+0 2
+cob=(9) /home/chogan/local/lib/libhdf5_debug.so.1000.0.0
+cfi=(281) /home/chogan/dev/hdf5/src/H5C.c
+cfn=(2128) H5C_unsettle_ring
+calls=8 3323 
+0 32
+
+fn=(2130) 0x000000000488b090
+0 2
+cob=(9)
+cfi=(289) /home/chogan/dev/hdf5/src/H5MFaggr.c
+cfn=(2132) H5MF_aggr_vfd_alloc
+calls=7 101 
+0 3253
+
+ob=(9)
+fl=(264) /home/chogan/dev/hdf5/src/H5FDint.c
+fn=(2570) H5FD_write
+216 9
++2 1
++1 1
++2 10
++8 1
+cob=(2)
+cfi=(18)
+cfn=(2572) 0x000000000488a8d0
+calls=4 0 
+* 56
+* 1
++8 2
++4 8
+cfi=(224) /home/chogan/dev/hdf5/src/H5FDsec2.c
+cfn=(2042) H5FD_sec2_get_eoa
+calls=4 565 
+* 315
+* 3
++2 8
++5 16
+cfi=(224)
+cfn=(2576) H5FD_sec2_write
+calls=4 784 
+* 137
+* 2
++3 1
++1 1
++1 2
+
+fn=(2040) H5FD_get_eoa
+307 12
++1 2
++2 20
++5 16
+cfi=(224)
+cfn=(2042)
+calls=31 565 
+* 630
+* 6
++4 8
++3 2
++1 4
+
+fl=(286) /home/chogan/dev/hdf5/src/H5Fsuper.c
+fn=(2160) H5F_eoa_dirty
+1501 10
++1 2
++2 20
++8 6
+cob=(2)
+cfi=(18)
+cfn=(2162) 0x000000000488df60
+calls=5 0 
+* 1148
+* 4
++7 10
++5 10
++5 2
++1 2
++1 4
+
+fn=(2164) H5F_super_dirty
+1549 10
++1 2
++2 20
++8 10
+cob=(2)
+cfi=(18)
+cfn=(2166) 0x000000000488d330
+calls=6 0 
+* 1090
+* 4
++3 2
++1 2
++1 4
+
+fl=(349) /home/chogan/dev/hdf5/src/H5Ztrans.c
+fn=(3282) H5Z_xform_noop
+1757 4
++1 1
++2 9
++2 3
++2 1
++1 2
+
+fl=(208) /home/chogan/dev/hdf5/src/H5MM.c
+fn=(1088) H5MM_memcpy
+609 35
++1 5
++12 30
+cob=(2)
+cfi=(18)
+cfn=(1090)
+calls=1527 0 
+* 75
+* 5
++2 5
++2 10
+
+fn=(1018) H5MM_calloc
+355 20
++1 4
++5 8
++5 16
+cob=(2)
+cfi=(18)
+cfn=(914) 0x000000000488dae0
+calls=434 0 
+* 4564
+* 8
++6 4
++1 8
+
+fn=(1030) H5MM_malloc
+268 45
++1 9
++18 18
++35 27
+cob=(2)
+cfi=(18)
+cfn=(1032) 0x00000000048896c0
+calls=6311 0 
+* 1850
+* 18
++6 9
++1 18
+
+fn=(1094) H5MM_xfree
+528 55
++4 22
++28 33
+cob=(2)
+cfi=(18)
+cfn=(1096) 0x000000000488a8f0
+calls=6753 0 
+* 1890
++4 11
++1 22
+
+fl=(245) /home/chogan/dev/hdf5/src/H5Olayout.c
+fn=(1628) H5O__layout_copy
+715 6
++1 2
++1 2
++1 1
++2 5
++6 2
++4 289
++3 14
++20 2
++20 2
++3 2
++4 1
++1 2
+
+fn=(3340) H5O__layout_reset
+835 5
++1 2
++1 1
++2 5
++2 2
++2 4
++2 4
++6 2
++1 3
++4 1
++1 2
+
+fl=(291) /home/chogan/dev/hdf5/src/H5FDspace.c
+fn=(2156) H5FD_extend
+103 7
++2 1
++2 5
++9 8
+cfi=(224)
+cfn=(2042)
+calls=2 565 
+* 315
+* 1
++3 19
+
+ob=(2)
+fl=(18)
+fn=(2140) 0x000000000488d0e0
+0 4
+cob=(9)
+cfi=(284) /home/chogan/dev/hdf5/src/H5Fquery.c
+cfn=(2142) H5F_get_alignment
+calls=14 1187 
+0 24
+
+fn=(2166)
+0 8
+cob=(9)
+cfi=(250) /home/chogan/dev/hdf5/src/H5AC.c
+cfn=(2168) H5AC_mark_entry_dirty
+calls=31 890 
+0 1282
+
+fn=(2336) 0x0000000004888f60
+0 2
+cob=(9)
+cfi=(250)
+cfn=(2338) H5AC_unpin_entry
+calls=9 1399 
+0 207
+
+fn=(2430) 0x00000000048891d0
+0 2
+cob=(3)
+cfi=(118) /build/glibc-YYA7BZ/glibc-2.31/time/../sysdeps/unix/sysv/linux/gettimeofday.c
+cfn=(2432) __gettimeofday_syscall
+calls=3 32 
+0 8
+
+fn=(3280) 0x0000000004888170
+0 2
+cob=(9)
+cfi=(349)
+cfn=(3282)
+calls=2 1757 
+0 20
+
+fn=(3308) 0x0000000004888ab0
+0 2
+cob=(9)
+cfi=(244) /home/chogan/dev/hdf5/src/H5Dint.c
+cfn=(3310) H5D__alloc_storage
+calls=1 2287 
+0 9830
+
+fn=(3336) 0x000000000488a290
+0 2
+cob=(9)
+cfi=(238) /home/chogan/dev/hdf5/src/H5Omessage.c
+cfn=(3338) H5O__msg_write_real
+calls=1 363 
+0 2670
+
+fn=(3350) 0x000000000488b9c0
+0 2
+cob=(9)
+cfi=(259) /home/chogan/dev/hdf5/src/H5CX.c
+cfn=(3352) H5CX_get_vec_size
+calls=2 2002 
+0 128
+
+fn=(878) 0x000000000488da00
+0 74
+cob=(5) /usr/lib/x86_64-linux-gnu/libpthread-2.31.so
+cfi=(184) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_once.c
+cfn=(880) pthread_once
+calls=2978 136 
+0 222
+
+fn=(1028) 0x000000000488d550
+0 18
+cob=(9)
+cfi=(208)
+cfn=(1030)
+calls=6311 268 
+0 1994
+
+fn=(1762) 0x000000000488b810
+0 2
+cob=(9)
+cfi=(259)
+cfn=(1764) H5CX_push
+calls=78 787 
+0 397
+
+fn=(1780) 0x0000000004889cf0
+0 2
+cob=(9)
+cfi=(259)
+cfn=(1782) H5CX_pop
+calls=78 3580 
+0 188
+
+fn=(2056) 0x0000000004887f10
+0 24
+cob=(9)
+cfi=(259)
+cfn=(2058) H5CX_set_tag
+calls=216 2799 
+0 708
+
+fn=(2094) 0x000000000488e000
+0 4
+cob=(9)
+cfi=(259)
+cfn=(2096) H5CX_set_ring
+calls=35 2827 
+0 118
+
+fn=(2136) 0x000000000488f380
+0 4
+cob=(9)
+cfi=(284)
+cfn=(2138) H5F_get_eoa
+calls=24 986 
+0 766
+
+fn=(2174) 0x0000000004888ff0
+0 2
+cob=(9)
+cfi=(284)
+cfn=(2176) H5F_get_threshold
+calls=7 1209 
+0 12
+
+fn=(2304) 0x000000000488f4e0
+0 2
+cob=(9)
+cfi=(250)
+cfn=(2306) H5AC_protect
+calls=32 1276 
+0 675
+
+fn=(2360) 0x000000000488beb0
+0 6
+cob=(9)
+cfi=(236) /home/chogan/dev/hdf5/src/H5Oint.c
+cfn=(2362) H5O__inc_rc
+calls=19 2952 
+0 179
+
+fn=(2404) 0x0000000004888e00
+0 4
+cob=(9)
+cfi=(308) /home/chogan/dev/hdf5/src/H5Ochunk.c
+cfn=(2406) H5O__chunk_protect
+calls=14 163 
+0 1176
+
+fn=(2606) 0x0000000004888060
+0 2
+cob=(9)
+cfi=(214) /home/chogan/dev/hdf5/src/H5VLint.c
+cfn=(2608) H5VL_set_vol_wrapper
+calls=12 2163 
+0 753
+
+fn=(2848) 0x000000000488bf90
+0 2
+cob=(9)
+cfi=(234) /home/chogan/dev/hdf5/src/H5T.c
+cfn=(2850) H5T_detect_class
+calls=5 2074 
+0 37
+
+fn=(3250) 0x000000000488cbc0
+0 4
+cob=(9)
+cfi=(322) /home/chogan/dev/hdf5/src/H5S.c
+cfn=(3252) H5S_get_validated_dataspace
+calls=4 259 
+0 656
+
+fn=(3272) 0x000000000488ede0
+0 2
+cob=(9)
+cfi=(259)
+cfn=(3274) H5CX_get_data_transform
+calls=2 2354 
+0 90
+
+fn=(3284) 0x000000000488cb60
+0 4
+cob=(9)
+cfi=(335) /home/chogan/dev/hdf5/src/H5Sselect.c
+cfn=(3286) H5S_get_select_npoints
+calls=4 436 
+0 626
+
+fn=(3316) 0x000000000488b180
+0 2
+cob=(9)
+cfi=(244)
+cfn=(3318) H5D__mark
+calls=1 3455 
+0 5237
+
+fn=(3324) 0x000000000488ddd0
+0 2
+cob=(9)
+cfi=(281)
+cfn=(3326) H5C_pin_protected_entry
+calls=2 2111 
+0 61
+
+fn=(906) 0x000000000488a7e0
+0 74
+cob=(9)
+cfi=(186) /home/chogan/dev/hdf5/src/H5TS.c
+cfn=(908) H5TS_cancel_count_inc
+calls=2977 397 
+0 1701
+
+fn=(2352) 0x000000000488d460
+0 2
+cob=(9)
+cfi=(236)
+cfn=(2354) H5O_pin
+calls=5 1229 
+0 1830
+
+fn=(2426) 0x000000000488d170
+0 2
+cob=(9)
+cfi=(309) /home/chogan/dev/hdf5/src/H5timer.c
+cfn=(2428) H5_now
+calls=3 255 
+0 29
+
+fn=(2434) 0x0000000004889b10
+0 2
+cob=(9)
+cfi=(236)
+cfn=(2436) H5O_unpin
+calls=5 1276 
+0 265
+
+fn=(2932) 0x000000000488af20
+0 4
+cob=(9)
+cfi=(322)
+cfn=(2934) H5S_get_simple_extent_npoints
+calls=3 773 
+0 46
+
+fn=(3268) 0x0000000004889360
+0 2
+cob=(9)
+cfi=(234)
+cfn=(3270) H5T_path_find
+calls=2 4798 
+0 247
+
+fn=(3372) 0x000000000488f230
+0 2
+cob=(9)
+cfi=(351) /home/chogan/dev/hdf5/src/H5VM.c
+cfn=(3374) H5VM_opvv
+calls=2 1369 
+0 936
+
+fn=(930) 0x000000000488e830
+0 148
+cob=(5)
+cfi=(152) /build/glibc-YYA7BZ/glibc-2.31/nptl/../nptl/pthread_mutex_lock.c
+cfn=(554) pthread_mutex_lock
+calls=5980 64 
+0 2146
+
+fn=(980) 0x0000000004888e60
+0 2
+cob=(5)
+cfi=(204) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_cond_signal.c
+cfn=(982) pthread_cond_signal@@GLIBC_2.3.2
+calls=57 36 
+0 22
+
+fn=(1794) 0x000000000488dc50
+0 2
+cob=(9)
+cfi=(206) /home/chogan/dev/hdf5/src/H5E.c
+cfn=(1796) H5E__get_stack
+calls=108 356 
+0 40
+
+fn=(2122) 0x000000000488b880
+0 2
+cob=(9)
+cfi=(250)
+cfn=(2124) H5AC_unsettle_ring
+calls=8 2594 
+0 63
+
+fn=(2170) 0x0000000004889000
+0 8
+cob=(9)
+cfi=(281)
+cfn=(2172) H5C_mark_entry_dirty
+calls=31 1546 
+0 1126
+
+fn=(2320) 0x0000000004888190
+0 2
+cob=(9)
+cfi=(281)
+cfn=(2322) H5C_unprotect
+calls=32 2963 
+0 212
+
+fn=(2340) 0x0000000004888910
+0 2
+cob=(9)
+cfi=(281)
+cfn=(2342) H5C_unpin_entry
+calls=9 2899 
+0 168
+
+fn=(2412) 0x000000000488b750
+0 6
+cob=(9)
+cfi=(236)
+cfn=(2414) H5O__dec_rc
+calls=21 2988 
+0 286
+
+fn=(2568) 0x000000000488b580
+0 2
+cob=(9)
+cfi=(264)
+cfn=(2570)
+calls=4 216 
+0 574
+
+fn=(2614) 0x000000000488d7a0
+0 4
+cob=(9)
+cfi=(259)
+cfn=(2616) H5CX_set_vol_wrap_ctx
+calls=24 1467 
+0 138
+
+fn=(2808) 0x0000000004889ab0
+0 2
+cob=(9)
+cfi=(238)
+cfn=(2810) H5O_msg_exists_oh
+calls=12 917 
+0 88
+
+fn=(3242) 0x0000000004888920
+0 2
+cob=(9)
+cfi=(261) /home/chogan/dev/hdf5/src/H5VLcallback.c
+cfn=(3244) H5VL_dataset_write
+calls=1 2174 
+0 29306
+
+fn=(3260) 0x000000000488cf20
+0 2
+cob=(9)
+cfi=(284)
+cfn=(3262) H5F_get_vol_obj
+calls=3 1321 
+0 11
+
+fn=(3288) 0x000000000488e730
+0 2
+cob=(9)
+cfi=(335)
+cfn=(3290) H5S_select_shape_same
+calls=2 1786 
+0 618
+
+fn=(3332) 0x0000000004889520
+0 2
+cob=(9)
+cfi=(238)
+cfn=(3334) H5O_msg_write_oh
+calls=1 315 
+0 2953
+
+fn=(914)
+0 8
+cob=(3)
+cfi=(148) /build/glibc-YYA7BZ/glibc-2.31/malloc/malloc.c
+cfn=(916) calloc
+calls=436 3366 
+0 4556
+
+fn=(976) 0x000000000488d320
+0 74
+cob=(9)
+cfi=(186)
+cfn=(978) H5TS_mutex_unlock
+calls=2990 343 
+0 3028
+
+fn=(984) 0x0000000004889ae0
+0 74
+cob=(9)
+cfi=(186)
+cfn=(986) H5TS_cancel_count_dec
+calls=2977 461 
+0 1624
+
+fn=(996) 0x00000000048882f0
+0 4
+cob=(3)
+cfi=(205) /build/glibc-YYA7BZ/glibc-2.31/string/../sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+cfn=(998) __memset_avx2_unaligned_erms
+calls=1695 167 
+0 30
+
+fn=(1016) 0x000000000488eb30
+0 8
+cob=(9)
+cfi=(208)
+cfn=(1018)
+calls=434 355 
+0 4632
+
+ob=(9)
+fl=(291)
+fn=(2156)
+123 2
++3 2
++1 9
+cfi=(224)
+cfn=(2072) H5FD_sec2_set_eoa
+calls=2 591 
+* 17
+* 2
++3 1
++1 1
++1 2
+
+fn=(2150) H5FD_alloc
+251 10
++1 1
++2 10
++9 8
+cob=(2)
+cfi=(18)
+cfn=(2152) 0x0000000004888b80
+calls=2 0 
+* 877
+* 1
++1 2
++4 3
+cob=(2)
+cfi=(18)
+cfn=(2158) 0x000000000488b420
+calls=2 0 
+* 1056
+* 2
++3 1
++1 1
++1 2
+
+fn=(2154) H5FD__alloc_real
+153 14
++1 2
++3 1
++2 1
++2 5
++12 5
++1 8
+cfi=(224)
+cfn=(1832) H5FD_sec2_query
+calls=2 518 
+* 65
++3 5
++3 8
+cfi=(224)
+cfn=(2042)
+calls=2 565 
+* 315
+* 1
++3 1
++1 9
++16 5
++6 8
+cfn=(2156)
+calls=2 103 
+* 392
+* 1
++1 2
++5 4
++1 2
++3 8
++4 4
++6 1
++1 8
+
+fl=(322)
+fn=(2854) H5S_has_extent
+1926 10
++1 2
++2 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=5 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=5 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926) 0x0000000004889a60
+calls=5 0 
+* 210
+* 8
++4 8
++3 2
++2 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=5 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=5 0 
+* 90
+* 2
++1 4
+
+fn=(3298) H5S_get_simple_extent_ndims
+940 10
++1 2
++2 22
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 8
++5 8
++4 6
++1 2
++9 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+* 2
++1 4
+
+fn=(3252)
+259 12
++1 2
++2 22
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 8
++5 4
++4 4
++1 6
++12 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+
+ob=(2)
+fl=(18)
+fn=(1056) 0x000000000488cad0
+0 72
+cob=(3)
+cfi=(212) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_equal.c
+cfn=(1058) pthread_equal
+calls=2933 24 
+0 180
+
+fn=(1328) 0x000000000488e0b0
+0 2
+cob=(9)
+cfi=(234)
+cfn=(1330) H5T_cmp
+calls=1454 4350 
+0 33
+
+fn=(1372) 0x0000000004887c20
+0 2
+cob=(9)
+cfi=(234)
+cfn=(1374) H5T_get_class
+calls=154 2000 
+0 27
+
+fn=(1726) 0x0000000004888590
+0 4
+cob=(9)
+cfi=(207) /home/chogan/dev/hdf5/src/H5I.c
+cfn=(1728) H5I_object_verify
+calls=19 1012 
+0 1368
+
+fn=(2012) 0x000000000488cfa0
+0 6
+cob=(9)
+cfi=(284)
+cfn=(2014) H5F_get_intent
+calls=76 111 
+0 942
+
+fn=(2038) 0x00000000048888e0
+0 4
+cob=(9)
+cfi=(264)
+cfn=(2040)
+calls=31 307 
+0 700
+
+fn=(2356) 0x000000000488ab50
+0 2
+cob=(9)
+cfi=(236)
+cfn=(2358) H5O_protect
+calls=22 1043 
+0 1330
+
+fn=(2408) 0x0000000004887c40
+0 4
+cob=(9)
+cfi=(308)
+cfn=(2410) H5O__chunk_unprotect
+calls=14 237 
+0 606
+
+fn=(2550) 0x0000000004889990
+0 2
+cob=(9)
+cfi=(317) /home/chogan/dev/hdf5/src/H5PB.c
+cfn=(2552) H5PB_write
+calls=9 989 
+0 674
+
+fn=(2852) 0x00000000048884d0
+0 4
+cob=(9)
+cfi=(322)
+cfn=(2854)
+calls=5 1926 
+0 638
+
+fn=(3328) 0x000000000488d360
+0 2
+cob=(9)
+cfi=(336) /home/chogan/dev/hdf5/src/H5Dlayout.c
+cfn=(3330) H5D__layout_oh_write
+calls=1 702 
+0 3086
+
+fn=(3354) 0x000000000488e320
+0 4
+cob=(9)
+cfi=(335)
+cfn=(3356) H5S_select_iter_init
+calls=4 1155 
+0 910
+
+fn=(3384) 0x000000000488bd60
+0 4
+cob=(9)
+cfi=(335)
+cfn=(3386) H5S_select_iter_release
+calls=4 1497 
+0 662
+
+fn=(910) 0x0000000004887f20
+0 214
+cob=(5)
+cfi=(191) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_getspecific.c
+cfn=(912) pthread_getspecific
+calls=6738 25 
+0 2033
+
+fn=(922) 0x0000000004887da0
+0 4
+cob=(5)
+cfi=(193) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_setcancelstate.c
+cfn=(924) pthread_setcancelstate
+calls=1242 26 
+0 55
+
+fn=(926)
+0 74
+cob=(9)
+cfi=(186)
+cfn=(928) H5TS_mutex_lock
+calls=2990 293 
+0 3799
+
+fn=(1032)
+0 18
+cob=(3)
+cfi=(148)
+cfn=(544) malloc
+calls=6313 3023 
+0 1832
+
+fn=(1086) 0x000000000488cef0
+0 10
+cob=(9)
+cfi=(208)
+cfn=(1088)
+calls=1527 609 
+0 165
+
+fn=(1092) 0x0000000004889070
+0 22
+cob=(9)
+cfi=(208)
+cfn=(1094)
+calls=6781 528 
+0 2033
+
+fn=(1096)
+0 22
+cob=(3)
+cfi=(148)
+cfn=(1098) free
+calls=6756 3087 
+0 1868
+
+fn=(1790) 0x000000000488a7f0
+0 2
+cob=(9)
+cfi=(260) /home/chogan/dev/hdf5/src/H5Eint.c
+cfn=(1792) H5E_clear_stack
+calls=45 913 
+0 72
+
+fn=(2112) 0x0000000004888130
+0 2
+cob=(9)
+cfi=(280) /home/chogan/dev/hdf5/src/H5MF.c
+cfn=(2114) H5MF_alloc
+calls=7 791 
+0 4047
+
+fn=(2152)
+0 2
+cob=(9)
+cfi=(291)
+cfn=(2154)
+calls=2 153 
+0 875
+
+fn=(2316) 0x0000000004888d70
+0 2
+cob=(9)
+cfi=(250)
+cfn=(2318) H5AC_unprotect
+calls=32 1511 
+0 277
+
+fn=(2572)
+0 2
+cob=(9)
+cfi=(259)
+cfn=(2574) H5CX_get_dxpl
+calls=15 1535 
+0 54
+
+fn=(2946) 0x000000000488b800
+0 2
+cob=(9)
+cfi=(227) /home/chogan/dev/hdf5/src/H5Pdcpl.c
+cfn=(2948) H5P_is_fill_value_defined
+calls=2 3419 
+0 35
+
+fn=(3296) 0x0000000004889be0
+0 4
+cob=(9)
+cfi=(322)
+cfn=(3298)
+calls=4 940 
+0 656
+
+fn=(3360) 0x000000000488e650
+0 4
+cob=(9)
+cfi=(335)
+cfn=(3362) H5S_select_iter_get_seq_list
+calls=4 1458 
+0 790
+
+fn=(932) 0x000000000488b720
+0 74
+cob=(3)
+cfi=(194) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_self.c
+cfn=(934) pthread_self
+calls=2990 24 
+0 111
+
+fn=(936) 0x000000000488f030
+0 148
+cob=(5)
+cfi=(154) /build/glibc-YYA7BZ/glibc-2.31/nptl/pthread_mutex_unlock.c
+cfn=(560) pthread_mutex_unlock
+calls=5980 356 
+0 1406
+
+fn=(1124) 0x0000000005046560
+0 8
+cob=(3)
+cfi=(205)
+cfn=(998)
+calls=361 167 
+0 3687
+
+fn=(2116) 0x00000000048897f0
+0 6
+cob=(9)
+cfi=(280)
+cfn=(2118) H5MF__alloc_to_fs_type
+calls=34 262 
+0 105
+
+fn=(2158)
+0 4
+cob=(9)
+cfi=(286)
+cfn=(2160)
+calls=5 1501 
+0 1218
+
+fn=(2162)
+0 4
+cob=(9)
+cfi=(286)
+cfn=(2164)
+calls=6 1549 
+0 1144
+
+fn=(2364) 0x0000000004887e70
+0 2
+cob=(9)
+cfi=(236)
+cfn=(2366) H5O_unprotect
+calls=22 1312 
+0 318
+
+fn=(2622) 0x000000000488a0f0
+0 2
+cob=(9)
+cfi=(214)
+cfn=(2624) H5VL_reset_vol_wrapper
+calls=12 2308 
+0 665
+
+fn=(3254) 0x000000000488f240
+0 2
+cob=(9)
+cfi=(348) /home/chogan/dev/hdf5/src/H5Dio.c
+cfn=(3256) H5D__write
+calls=1 605 
+0 27071
+
+fn=(3302) 0x000000000488e1e0
+0 2
+cob=(9)
+cfi=(284)
+cfn=(3304) H5F_get_shared
+calls=4 249 
+0 11
+
+fn=(3378) 0x0000000004888c90
+0 2
+cob=(9)
+cfi=(315) /home/chogan/dev/hdf5/src/H5Fio.c
+cfn=(3380) H5F_shared_block_write
+calls=1 185 
+0 731
+
+fn=(1060) 0x000000000488c440
+0 2
+cob=(9)
+cfi=(209) /home/chogan/dev/hdf5/src/H5SL.c
+cfn=(1062) H5SL_insert
+calls=1107 1105 
+0 778
+
+fn=(2048) 0x000000000488c450
+0 24
+cob=(9)
+cfi=(250)
+cfn=(2050) H5AC_tag
+calls=216 2182 
+0 1314
+
+fn=(2052) 0x000000000488a5b0
+0 12
+cob=(9)
+cfi=(259)
+cfn=(2054) H5CX_get_tag
+calls=120 1659 
+0 324
+
+fn=(2086) 0x000000000488f410
+0 4
+cob=(9)
+cfi=(250)
+cfn=(2088) H5AC_set_ring
+calls=35 2501 
+0 219
+
+fn=(2090) 0x0000000004888200
+0 4
+cob=(9)
+cfi=(259)
+cfn=(2092) H5CX_get_ring
+calls=54 1685 
+0 108
+
+fn=(2554) 0x0000000004887ea0
+0 2
+cob=(9)
+cfi=(318) /home/chogan/dev/hdf5/src/H5Faccum.c
+cfn=(2556) H5F__accum_write
+calls=9 424 
+0 621
+
+fn=(2578) 0x000000000488db20
+0 2
+cob=(5)
+cfi=(320) /build/glibc-YYA7BZ/glibc-2.31/nptl/../sysdeps/unix/sysv/linux/pwrite64.c
+cfn=(2580) pwrite
+calls=4 28 
+0 10
+
+fn=(2936) 0x000000000488ed40
+0 4
+cob=(9)
+cfi=(234)
+cfn=(2938) H5T_get_size
+calls=5 4321 
+0 24
+
+fn=(3264) 0x000000000488cae0
+0 2
+cob=(9)
+cfi=(234)
+cfn=(3266) H5T_patch_vlen_file
+calls=2 6078 
+0 17
+
+fn=(3320) 0x0000000004889a90
+0 2
+cob=(9)
+cfi=(250)
+cfn=(3322) H5AC_pin_protected_entry
+calls=2 1139 
+0 100
+
+fn=(2144) 0x000000000488db90
+0 2
+cob=(9)
+cfi=(290) /home/chogan/dev/hdf5/src/H5Fspace.c
+cfn=(2146) H5F__alloc
+calls=2 97 
+0 2597
+
+fn=(2148) 0x000000000488ee40
+0 2
+cob=(9)
+cfi=(291)
+cfn=(2150)
+calls=2 251 
+0 1974
+
+fn=(2308) 0x00000000048890c0
+0 2
+cob=(9)
+cfi=(281)
+cfn=(2310) H5C_protect
+calls=32 2181 
+0 303
+
+fn=(2422) 0x000000000488a9f0
+0 2
+cob=(9)
+cfi=(236)
+cfn=(2424) H5O_touch_oh
+calls=3 1367 
+0 1189
+
+fn=(2610) 0x000000000488cc00
+0 4
+cob=(9)
+cfi=(259)
+cfn=(2612) H5CX_get_vol_wrap_ctx
+calls=26 1587 
+0 141
+
+fn=(3238) 0x000000000488d950
+0 2
+cob=(9)
+cfi=(259)
+cfn=(3240) H5CX_set_dxpl
+calls=2 1130 
+0 59
+
+fn=(3276) 0x000000000488bdc0
+0 2
+cob=(9)
+cfi=(234)
+cfn=(3278) H5T_path_noop
+calls=2 5146 
+0 17
+
+fn=(3312) 0x0000000004888e40
+0 2
+cob=(9)
+cfi=(337) /home/chogan/dev/hdf5/src/H5Dcontig.c
+cfn=(3314) H5D__contig_alloc
+calls=1 164 
+0 4077
+
+fn=(3368) 0x000000000488bc70
+0 2
+cob=(9)
+cfi=(284)
+cfn=(3370) H5F_shared_has_feature
+calls=2 863 
+0 319
+
+ob=(11) /home/chogan/dev/multithreaded_hdf5/mth5
+fl=(168) /home/chogan/dev/multithreaded_hdf5/mth5.cpp
+fn=(3230) write_datasets(char const*, char const**, int, int, bool)::{lambda(int, int, long, long, void*, int)#1}::operator()(int, int, long, long, void*, int) const
+cob=(9)
+cfi=(348)
+cfn=(3236) H5Dwrite
+calls=1 284 
+96 31178
+
+fn=(768) main
+cfn=(860) write_datasets(char const*, char const**, int, int, bool)
+calls=1 71 
+412 31178
+
+fn=(860)
+cfn=(3230)
+calls=1 94 
+164 31178
+
+fl=(163) ???
+fn=(746) _start
+cob=(3)
+cfi=(164) /build/glibc-YYA7BZ/glibc-2.31/csu/../csu/libc-start.c
+cfn=(748) (below main)
+calls=1 137 
+0 31178
+
+ob=(1) /usr/lib/x86_64-linux-gnu/ld-2.31.so
+fl=(1) ???
+fn=(0) 0x0000000000001100
+cob=(11)
+cfi=(163)
+cfn=(746)
+calls=1 0 
+0 31178
+
+ob=(9)
+fl=(322)
+fn=(3252)
+284 2
++1 4
+
+fn=(2934)
+773 10
++1 2
++2 20
++6 8
++3 2
++1 4
+
+fl=(280)
+fn=(2118)
+262 24
++1 12
++6 12
++17 45
++2 6
++1 6
+
+fn=(2120) H5MF__fsm_type_is_self_referential
+3387 9
++5 1
++2 4
++7 7
+cob=(2)
+cfi=(18)
+cfn=(2116)
+calls=11 0 
+* 37
++1 7
+cob=(2)
+cfi=(18)
+cfn=(2116)
+calls=11 0 
+* 37
++2 4
++14 2
++3 9
++3 1
++1 5
+
+fn=(2114)
+791 10
++1 1
++1 1
++2 1
++2 6
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=7 0 
+* 141
+* 9
++11 7
+cob=(2)
+cfi=(18)
+cfn=(2116)
+calls=7 0 
+* 37
++7 6
+cfn=(2120)
+calls=7 3387 
+* 123
+* 2
++3 1
++1 5
+cob=(2)
+cfi=(18)
+cfn=(2086)
+calls=1 0 
+* 141
++3 5
++5 5
+cob=(2)
+cfi=(18)
+cfn=(2122)
+calls=7 0 
+* 65
+* 2
++4 16
++8 8
++6 3
++4 5
++6 6
+cob=(2)
+cfi=(18)
+cfn=(2130)
+calls=7 0 
+* 3255
+* 4
++9 1
++2 3
++1 4
+cob=(2)
+cfi=(18)
+cfn=(2086)
+calls=7 0 
+* 82
++9 4
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=7 0 
+* 82
+* 1
++1 5
+
+fl=(214)
+fn=(2626) H5VL__free_vol_wrapper
+2123 5
++1 1
++2 5
++9 4
++6 4
+cfn=(2628) H5VL__conn_dec_rc
+calls=12 933 
+* 42
+* 2
++4 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=12 0 
+* 99
+* 1
++3 1
++1 2
+
+fn=(2608)
+2163 8
++1 1
++1 1
++2 11
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=12 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=12 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=12 0 
+* 105
+* 4
++6 3
+cob=(2)
+cfi=(18)
+cfn=(2610)
+calls=12 0 
+* 71
+* 2
++4 3
++1 1
++7 6
++10 2
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=12 0 
+* 209
+* 4
++4 4
+cfn=(2596) H5VL__conn_inc_rc
+calls=12 906 
+* 32
++3 2
++1 4
++1 4
++7 3
+cob=(2)
+cfi=(18)
+cfn=(2614)
+calls=12 0 
+* 71
+* 2
++3 1
++1 2
++4 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=12 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=12 0 
+* 45
+* 1
++1 5
+
+fn=(2624)
+2308 7
++1 1
++1 1
++2 11
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=12 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=12 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=12 0 
+* 105
+* 4
++3 3
+cob=(2)
+cfi=(18)
+cfn=(2610)
+calls=12 0 
+* 74
+* 2
++4 3
++4 4
++3 4
++2 3
+cfn=(2626)
+calls=12 2123 
+* 169
+* 2
++4 2
+cob=(2)
+cfi=(18)
+cfn=(2614)
+calls=12 0 
+* 71
+* 2
++9 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=12 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=12 0 
+* 45
+* 1
++1 5
+
+fn=(2628)
+933 5
++1 1
++2 5
++6 5
+cfi=(161) ???
+cfn=(2312) __addvdi3
+calls=18 0 
+* 12
+* 3
++3 4
++10 4
++3 1
++1 2
+
+fn=(2596)
+906 5
++1 4
++6 5
+cfi=(161)
+cfn=(2312)
+calls=18 0 
+* 11
+* 3
++2 2
++1 2
+
+fl=(351)
+fn=(3374)
+1369 10
++7 1
++2 1
++14 6
++1 6
++1 6
++1 6
++3 3
++1 3
++1 3
++1 3
++3 5
++1 5
++6 3
++42 3
++43 1
++1 1
++3 7
+cfi=(337)
+cfn=(3376) H5D__contig_writevv_sieve_cb
+calls=1 984 
+* 796
+* 2
++4 2
++3 1
++1 1
++1 3
++2 1
++25 4
+cfi=(161)
+cfn=(2312)
+calls=2 0 
+* 11
+* 1
++3 3
+cfi=(161)
+cfn=(3382) __subvdi3
+calls=2 0 
+* 12
+* 4
++1 3
+cfi=(161)
+cfn=(3382)
+calls=2 0 
+* 12
+* 4
++3 1
++1 2
+
+fl=(317)
+fn=(2552)
+989 12
++9 1
++2 1
++2 10
++6 3
++22 2
++1 8
+cob=(2)
+cfi=(18)
+cfn=(2554)
+calls=9 0 
+* 623
+* 2
++4 2
++10 2
++2 2
+1309 1
++1 5
+
+fl=(260)
+fn=(1792)
+913 5
++1 1
++2 10
++3 2
++1 1
+cob=(2)
+cfi=(18)
+cfn=(1794)
+calls=45 0 
+* 42
+* 3
++5 4
++4 1
++1 1
++1 2
+
+fl=(261)
+fn=(3244)
+2174 10
++1 1
++1 1
++2 10
++3 3
+cob=(2)
+cfi=(18)
+cfn=(2606)
+calls=1 0 
+* 755
+* 2
++2 1
++3 15
+cfn=(3246) H5VL__dataset_write
+calls=1 -44 
+* 27829
+* 3
++3 1
++2 3
+cob=(2)
+cfi=(18)
+cfn=(2622)
+calls=1 0 
+* 667
+* 2
++3 1
++1 2
+
+fn=(3246)
+2142 10
++1 1
++2 5
++3 4
++4 13
+cfi=(325) /home/chogan/dev/hdf5/src/H5VLnative_dataset.c
+cfn=(3248) H5VL__native_dataset_write
+calls=1 187 
+* 27789
+* 3
++3 1
++1 1
++1 2
+
+fl=(238)
+fn=(2416) H5O__copy_mesg
+1963 10
++1 1
++1 9
++1 1
++1 1
++2 5
++10 7
+cob=(2)
+cfi=(18)
+cfn=(2404)
+calls=6 0 
+* 590
+* 3
++4 6
+cfn=(2418) H5O__msg_reset_real
+calls=6 610 
+* 59
++3 8
+cfi=(245)
+cfn=(1628)
+calls=2 715 
+* 330
+* 6
++4 4
++3 2
++1 1
++3 6
+cob=(2)
+cfi=(18)
+cfn=(2408)
+calls=6 0 
+* 305
+* 2
++2 1
++3 4
++1 6
+cob=(2)
+cfi=(18)
+cfn=(2422)
+calls=2 0 
+* 1191
+* 2
++3 1
++2 2
++3 1
++1 2
+
+fn=(3338)
+363 10
++3 1
++2 5
++11 5
++1 16
+-1 22
++2 1
++1 4
++4 10
++3 12
++38 11
+cfn=(2416)
+calls=1 1963 
+* 2566
+* 3
++6 1
++1 1
++1 2
+
+fn=(2418)
+610 6
++1 1
++2 5
++5 2
++1 4
++1 5
+cfi=(245)
+cfn=(3340)
+calls=7 835 
+* 31
+* 2
++8 1
++1 2
+
+fn=(2810)
+917 5
++3 1
++2 4
++4 4
++4 2
++1 44
++1 2
+-2 23
++5 1
++1 2
+
+fn=(3334)
+315 13
++2 1
++2 8
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=1 0 
+* 141
+* 9
++7 4
++6 10
+cob=(2)
+cfi=(18)
+cfn=(3336)
+calls=1 0 
+* 2672
+* 2
++3 1
++1 4
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=1 0 
+* 82
+* 1
++1 5
+
+fl=(348)
+fn=(3258) H5D__typeinfo_init
+901 12
++4 1
++2 6
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 4
++7 4
+cob=(2)
+cfi=(18)
+cfn=(3260)
+calls=2 0 
+* 13
+* 7
+cob=(2)
+cfi=(18)
+cfn=(3264)
+calls=2 0 
+* 19
+* 2
++4 5
+cob=(2)
+cfi=(18)
+cfn=(996)
+calls=2 0 
+* 20
++3 4
+cob=(2)
+cfi=(18)
+cfn=(1726)
+calls=2 0 
+* 686
+* 6
++2 5
++2 2
++1 3
++1 4
++1 3
++1 6
++16 5
+cob=(2)
+cfi=(18)
+cfn=(3268)
+calls=1 0 
+* 249
+* 6
++4 3
+cob=(2)
+cfi=(18)
+cfn=(3272)
+calls=2 0 
+* 92
+* 2
++4 3
+cob=(2)
+cfi=(18)
+cfn=(2936)
+calls=2 0 
+* 14
+* 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(2936)
+calls=2 0 
+* 14
+* 2
++1 8
++1 4
+cob=(2)
+cfi=(18)
+cfn=(3276)
+calls=2 0 
+* 19
+* 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(3280)
+calls=2 0 
+* 22
+* 2
++1 8
++1 2
++1 3
++94 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 1
++1 5
+
+fn=(3236)
+284 10
++1 1
++1 1
++2 6
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=1 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=1 0 
+* 83
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=1 0 
+* 93
+* 11
+cob=(2)
+cfi=(18)
+cfn=(1762)
+calls=1 0 
+* 399
+* 4
+cob=(2)
+cfi=(18)
+cfn=(1790)
+calls=1 0 
+* 74
++5 2
++2 2
++4 4
+cob=(2)
+cfi=(18)
+cfn=(1726)
+calls=1 0 
+* 686
+* 3
++4 2
++1 4
++6 3
+cob=(2)
+cfi=(18)
+cfn=(3238)
+calls=1 0 
+* 61
++3 12
+cob=(2)
+cfi=(18)
+cfn=(3242)
+calls=1 0 
+* 29308
+* 4
++3 1
++1 1
+cob=(2)
+cfi=(18)
+cfn=(1780)
+calls=1 0 
+* 190
+* 5
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=1 0 
+* 114
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=1 0 
+* 78
+* 1
++1 2
+
+fn=(3256)
+605 13
++1 1
++3 1
++1 1
++15 1
++2 1
++2 8
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=1 0 
+* 141
+* 4
++6 6
++8 4
+cob=(2)
+cfi=(18)
+cfn=(2012)
+calls=1 0 
+* 316
+* 3
++4 7
+cfn=(3258)
+calls=1 901 
+* 1582
+* 2
++2 1
++25 2
++1 4
++1 2
++1 2
++2 3
+cob=(2)
+cfi=(18)
+cfn=(3284)
+calls=1 0 
+* 315
+* 1
++3 3
+cob=(2)
+cfi=(18)
+cfn=(3284)
+calls=1 0 
+* 315
+* 2
++4 2
++13 3
+cob=(2)
+cfi=(18)
+cfn=(2852)
+calls=1 0 
+* 321
+* 3
++2 3
+cob=(2)
+cfi=(18)
+cfn=(2852)
+calls=1 0 
+* 321
+* 3
++16 5
+cob=(2)
+cfi=(18)
+cfn=(3288)
+calls=1 0 
+* 620
+* 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(3296)
+calls=1 0 
+* 330
+* 4
+cob=(2)
+cfi=(18)
+cfn=(3296)
+calls=1 0 
+* 330
+-1 2
++21 1
++1 2
++1 6
+cfn=(3300) H5D__ioinfo_init
+calls=1 +97 
+* 399
+* 2
++4 7
++1 9
+cfi=(337)
+cfn=(3306) H5D__contig_is_space_alloc
+calls=1 527 
+* 319
+* 1
+-1 2
++6 3
+cob=(2)
+cfi=(18)
+cfn=(2932)
+calls=1 0 
+* 25
+* 3
++4 7
+cob=(2)
+cfi=(18)
+cfn=(2848)
+calls=1 0 
+* 39
+* 2
++3 6
++3 6
+cob=(2)
+cfi=(18)
+cfn=(3308)
+calls=1 0 
+* 9832
+* 2
++5 2
+cob=(2)
+cfi=(18)
+cfn=(1016)
+calls=1 0 
+* 3803
+* 3
++4 14
+cfi=(337)
+cfn=(3342) H5D__contig_io_init
+calls=1 582 
+* 332
+* 2
++2 1
++9 11
+cfi=(337)
+cfn=(3344) H5D__contig_write
+calls=1 645 
+* 6800
+* 2
++21 1
++2 5
++2 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=1 0 
+* 299
+* 1
++3 5
+cfn=(3392) H5D__typeinfo_term
+calls=1 1228 
+* 321
+* 2
++4 3
++4 4
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=1 0 
+* 82
+* 1
++1 6
+
+fn=(3392)
+1228 5
++1 5
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 4
++3 4
++4 4
++5 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 1
++1 2
+
+fn=(3300)
+837 9
++1 5
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 4
++10 3
++1 4
+cob=(2)
+cfi=(18)
+cfn=(3302)
+calls=2 0 
+* 13
+* 2
++1 3
++3 28
++3 6
++1 6
++3 8
++5 3
++1 4
++15 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 1
++1 4
+
+fl=(234)
+fn=(1332) H5T__path_find_real
+4852 12
++5 1
++1 1
++1 2
++2 1
++1 1
++2 5
++11 3
++29 18
+cob=(2)
+cfi=(18)
+cfn=(1328)
+calls=154 0 
+* 35
+* 2
++1 3
++1 1
++1 2
++26 2
++7 24
++15 2
++7 4
++31 4
+cfi=(161)
+cfn=(1070) __addvsi3
+calls=44 0 
+* 12
+* 8
++35 4
++6 3
++21 5
++31 3
++21 4
+cob=(2)
+cfi=(18)
+cfn=(1372)
+calls=44 0 
+* 29
+* 2
++4 2
++3 2
++7 2
++2 2
++3 1
++1 6
+
+fn=(2938)
+4321 8
++2 6
++5 6
++1 4
+
+fn=(3270)
+4798 9
++2 1
++2 10
++9 1
++1 1
++3 7
+cfn=(1332)
+calls=2 +37 
+* 208
+* 3
++3 1
++1 1
++1 5
+
+fn=(3278)
+5146 5
++1 3
++4 7
++1 2
+
+fn=(1330)
+4350 8
++1 2
++5 1
++2 10
++7 3
++1 2
+4767 2
++2 2
++3 1
++1 2
+
+fn=(3266)
+6078 5
++1 4
++7 5
++3 1
++1 2
+
+fn=(1374)
+2000 6
++1 1
++2 10
++5 2
++1 5
++10 1
++1 2
+
+fn=(2850)
+2074 8
++2 1
++2 10
++10 2
++4 5
++4 7
++31 1
++4 1
++1 2
+
+fl=(186)
+fn=(908)
+397 148
++6 37
++2 148
+cob=(2)
+cfi=(18)
+cfn=(910)
+calls=2977 0 
+* 777
+* 37
++2 74
++18 148
++2 4
+cob=(2)
+cfi=(18)
+cfn=(922)
+calls=621 0 
+* 31
+* 1
++3 5
++2 1
++2 2
+-4 180
++2 36
++2 72
+
+fn=(986)
+461 185
++6 37
++2 148
+cob=(2)
+cfi=(18)
+cfn=(910)
+calls=2977 0 
+* 777
+* 37
++2 111
++1 4
+cob=(2)
+cfi=(18)
+cfn=(922)
+calls=621 0 
+* 28
+* 1
++2 3
++2 1
++2 4
+-4 108
++2 36
++2 144
+
+fn=(928)
+293 222
++5 148
+cob=(2)
+cfi=(18)
+cfn=(930)
+calls=2990 0 
+* 1147
+* 37
++2 74
++3 256
+cob=(2)
+cfi=(18)
+cfn=(932)
+calls=2933 0 
+* 180
+* 108
+cob=(2)
+cfi=(18)
+cfn=(1056)
+calls=2933 0 
+* 252
+* 72
++2 216
++3 4
++4 1
+cob=(2)
+cfi=(18)
+cfn=(932)
+calls=57 0 
+* 5
+* 2
++1 2
++3 4
+cob=(2)
+cfi=(18)
+cfn=(936)
+calls=57 0 
+* 21
+* 144
+cob=(2)
+cfi=(18)
+cfn=(936)
+calls=2933 0 
+* 756
++2 148
+
+fn=(978)
+343 185
++6 148
+cob=(2)
+cfi=(18)
+cfn=(930)
+calls=2990 0 
+* 1147
+* 37
++2 74
++3 185
++2 148
+cob=(2)
+cfi=(18)
+cfn=(936)
+calls=2990 0 
+* 777
+* 37
++2 148
++3 4
+cob=(2)
+cfi=(18)
+cfn=(980)
+calls=57 0 
+* 24
+* 1
++1 2
++4 37
++2 74
+
+fl=(350) /home/chogan/dev/hdf5/src/H5Dselect.c
+fn=(3346) H5D__select_write
+312 9
++1 1
++2 5
++4 9
+cfn=(3348) H5D__select_io
+calls=1 90 
+* 6738
+* 2
++4 1
++1 1
++1 2
+
+fn=(3348)
+90 12
++1 1
++1 1
++1 1
++1 1
++1 1
++1 1
++1 1
++1 1
++8 1
++2 5
++9 2
++42 3
+cob=(2)
+cfi=(18)
+cfn=(3350)
+calls=2 0 
+* 130
+* 2
++4 3
++3 1
++1 4
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 205
+* 3
++2 4
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 205
+* 3
++2 4
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 205
+* 3
++2 4
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 367
+* 3
++4 2
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 205
+* 3
++2 2
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=2 0 
+* 205
+* 3
++4 6
+cob=(2)
+cfi=(18)
+cfn=(3354)
+calls=2 0 
+* 457
+* 2
++2 1
++3 6
+cob=(2)
+cfi=(18)
+cfn=(3354)
+calls=2 0 
+* 457
+* 2
++2 1
++3 3
++1 3
++3 1
++2 4
++2 12
+cob=(2)
+cfi=(18)
+cfn=(3360)
+calls=2 0 
+* 397
+* 3
++4 1
++4 4
++2 12
+cob=(2)
+cfi=(18)
+cfn=(3360)
+calls=2 0 
+* 397
+* 3
++4 1
++4 4
++8 15
+cfi=(337)
+cfn=(3366) H5D__contig_writevv
+calls=1 1233 
+* 1329
+* 4
++8 2
++2 4
+-40 4
++46 5
+cob=(2)
+cfi=(18)
+cfn=(3384)
+calls=2 0 
+* 333
+* 2
++2 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 168
+* 1
++1 5
+cob=(2)
+cfi=(18)
+cfn=(3384)
+calls=2 0 
+* 333
+* 2
++2 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 168
+* 1
++3 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 145
+* 1
++1 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 329
+* 1
++1 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 145
+* 1
++1 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=2 0 
+* 329
+* 1
++2 1
++1 5
+
+fl=(209)
+fn=(1038) H5SL_new_node
+707 7
++1 1
++2 5
++3 2
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=1247 0 
+* 209
+* 3
++4 3
++1 3
++1 2
++1 3
++1 2
++1 5
+cob=(2)
+cfi=(18)
+cfn=(1028)
+calls=1247 0 
+* 202
+* 6
++4 3
++3 1
++1 2
+
+fn=(1062)
+1105 7
++1 1
++2 5
++13 6
+cfn=(1064) H5SL_insert_common
+calls=1107 756 
+* 753
+* 2
++3 1
++1 1
++1 2
+
+fn=(1064)
+756 8
++3 1
++3 5
++14 3
++1 12
++6 111
+cfi=(161)
+cfn=(1070)
+calls=18 0 
+* 22
+* 40
+cfi=(161)
+cfn=(1070)
+calls=13 0 
+* 24
+* 17
++1 2
++37 4
++4 6
+cfn=(1038)
+calls=1028 707 
+* 459
+* 3
++4 3
++1 6
++1 4
++1 5
++1 6
++7 5
++3 3
++3 1
++1 3
+
+fl=(224)
+fn=(1832)
+518 5
++1 2
++2 3
++9 2
++1 2
++1 6
++1 6
++1 6
++1 6
++1 6
++1 6
++1 6
++3 6
++4 1
++1 2
+
+fn=(2576)
+784 18
++1 2
++1 2
++1 1
++2 4
++6 2
++2 20
++16 1
++1 1
++5 3
++3 2
++4 7
+cob=(2)
+cfi=(18)
+cfn=(2578)
+calls=4 0 
+* 12
+* 1
++1 2
++1 3
+cfi=(161)
+cfn=(2312)
+calls=4 0 
+* 11
+* 1
++4 2
++2 2
++12 2
++1 2
++1 2
+-37 4
++41 3
++1 2
++1 6
++1 5
++3 2
++6 1
++1 11
+
+fn=(2072)
+591 6
++1 2
++2 3
++2 3
++2 1
++1 2
+
+fn=(2042)
+565 30
++1 10
++3 25
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=48 0 
+* 40
+* 5
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=48 0 
+* 235
+* 15
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=48 0 
+* 525
+* 10
++2 15
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=48 0 
+* 415
+* 5
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=48 0 
+* 225
+* 10
++1 10
+
+fl=(290)
+fn=(2146)
+97 9
++1 1
++2 5
++10 5
++4 5
+cob=(2)
+cfi=(18)
+cfn=(2136)
+calls=2 0 
+* 385
+* 3
++4 18
++5 12
+cob=(2)
+cfi=(18)
+cfn=(2148)
+calls=2 0 
+* 1976
+* 1
++1 2
++4 3
+cob=(2)
+cfi=(18)
+cfn=(2158)
+calls=2 0 
+* 166
+* 2
++3 1
++1 1
++1 2
+
+fl=(281)
+fn=(3326)
+2111 5
++2 2
++1 1
++2 10
++5 3
++13 5
++4 5
+cfn=(2324) H5C__pin_entry_from_client
+calls=2 3809 
+* 24
+* 2
++3 1
++8 1
++1 2
+
+fn=(2322)
+2963 8
++15 1
++2 10
++2 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++5 4
++11 2
++7 7
++1 9
++13 4
++22 4
++37 5
++4 9
++2 2
++9 2
++18 9
++16 2
++4 2
++9 72
++2 2
++5 4
++1 8
++1 5
++13 2
++44 1
++8 1
++1 2
+
+fn=(2324)
+3809 6
++1 1
++2 5
++8 4
++6 2
++6 3
++3 1
++1 2
+
+fn=(2344) H5C__unpin_entry_from_client
+3900 8
++1 1
++2 5
++7 5
++2 5
++4 5
++1 6
+cfn=(2346) H5C__unpin_entry_real
+calls=9 -63 
+* 92
+* 2
++4 3
++3 1
++1 2
+
+fn=(2172)
+1546 20
++2 8
++1 4
++2 40
++5 12
++4 16
++15 16
++5 36
++3 12
++3 8
++1 8
++3 8
++1 45
++1 20
++1 8
+cob=(2)
+cfi=(18)
+cfn=(1060)
+calls=2 0 
+* 780
+* 44
++6 8
++4 5
++5 4
++4 8
++1 4
++8 4
++1 8
+
+fn=(2342)
+2899 5
++2 2
++1 1
++2 10
++4 3
++13 6
+cfn=(2344)
+calls=9 3900 
+* 135
+* 2
++3 1
++8 1
++1 2
+
+fn=(2128)
+3323 6
++2 1
++2 10
++7 4
++3 2
++2 4
++5 2
++16 1
++1 2
+
+fn=(2310)
+2181 13
++2 1
++2 1
++1 1
++6 1
++4 1
++2 10
++6 4
++16 4
++6 5
++1 5
++3 1
+cob=(2)
+cfi=(18)
+cfn=(2090)
+calls=32 0 
+* 56
+* 1
++8 30
++2 3
++1 4
++5 4
++14 4
++72 1
++1 3
+2484 4
++9 70
++2 2
++2 2
++5 2
++3 5
+cfi=(161)
+cfn=(2312)
+calls=9 0 
+* 11
+* 10
+cfi=(161)
+cfn=(2312)
+calls=26 0 
+* 11
+* 3
++4 2
++2 4
++1 2
+-1 2
++2 2
+-1 2
++2 2
++1 2
+-2 2
++63 2
++17 1
++8 1
++1 6
+
+fn=(2346)
+3854 7
++1 1
++5 4
++9 7
++1 68
++3 2
++8 1
++1 2
+
+fl=(250)
+fn=(2124)
+2594 6
++1 1
++2 10
++2 5
+cob=(2)
+cfi=(18)
+cfn=(2126)
+calls=8 0 
+* 34
+* 3
++3 1
++1 1
++1 2
+
+fn=(2168)
+890 20
++1 4
++1 4
++1 4
++2 40
++6 8
++1 12
++14 12
+cob=(2)
+cfi=(18)
+cfn=(2170)
+calls=31 0 
+* 1134
+* 8
++3 4
++2 20
++4 4
++1 8
+
+fn=(2338)
+1399 5
++1 1
++1 1
++1 1
++2 10
++5 2
++1 3
++4 3
+cob=(2)
+cfi=(18)
+cfn=(2340)
+calls=9 0 
+* 170
+* 2
++3 1
++2 5
++4 1
++1 2
+
+fn=(2050)
+2182 72
++1 48
++3 24
++1 6
+cob=(2)
+cfi=(18)
+cfn=(2052)
+calls=108 0 
+* 336
+* 12
++3 18
+cob=(2)
+cfi=(18)
+cfn=(2056)
+calls=108 0 
+* 366
+* 18
+cob=(2)
+cfi=(18)
+cfn=(2056)
+calls=108 0 
+* 366
++2 24
++1 24
+
+fn=(2088)
+2501 12
++1 8
++5 4
++1 1
+cob=(2)
+cfi=(18)
+cfn=(2090)
+calls=16 0 
+* 56
+* 2
++3 3
+cob=(2)
+cfi=(18)
+cfn=(2094)
+calls=16 0 
+* 61
+* 3
+cob=(2)
+cfi=(18)
+cfn=(2094)
+calls=19 0 
+* 61
++2 4
++1 4
+
+fn=(2318)
+1511 12
++6 1
++2 10
++14 4
++1 2
+-1 5
++2 5
++5 2
++22 6
+cob=(2)
+cfi=(18)
+cfn=(2320)
+calls=32 0 
+* 214
+* 2
++10 1
++2 7
++4 1
++1 5
+
+fn=(2306)
+1276 9
++1 1
++1 1
++2 10
++23 3
+cob=(2)
+cfi=(18)
+cfn=(2012)
+calls=32 0 
+* 316
+* 3
++8 8
+cob=(2)
+cfi=(18)
+cfn=(2308)
+calls=32 0 
+* 305
+* 3
++4 2
++5 4
++2 7
++5 1
++1 2
+
+fn=(3322)
+1139 5
++1 1
++1 1
++1 1
++2 10
++5 2
++1 3
++4 3
+cob=(2)
+cfi=(18)
+cfn=(3324)
+calls=2 0 
+* 63
+* 2
++3 1
++2 5
++4 1
++1 2
+
+fl=(323) /home/chogan/dev/hdf5/src/H5Sall.c
+fn=(3292) H5S__all_bounds
+744 12
++4 8
++7 6
++3 4
++1 10
++1 24
+-2 14
++5 2
++1 4
+
+fn=(3388) H5S__all_iter_release
+454 8
++1 6
++5 2
++1 4
+
+fn=(3294) H5S__all_is_single
+881 8
++1 6
++4 2
++1 4
+
+fn=(3364) H5S__all_iter_get_seq_list
+397 18
++3 8
++13 10
++4 8
++1 12
++3 4
++3 6
++3 12
++1 12
++1 14
++2 2
++1 4
+
+fn=(3358) H5S__all_iter_init
+158 10
++1 8
++7 4
++1 4
++3 6
++2 2
++1 4
+
+fl=(207)
+fn=(1234) H5I__find_id
+2185 10
++3 2
++2 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=576 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=576 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=576 0 
+* 210
+* 8
++3 8
++1 10
++2 12
++1 12
++4 20
++1 8
++10 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=576 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=576 0 
+* 90
+* 2
++1 4
+
+fn=(1728)
+1012 12
++1 2
++1 2
++2 20
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=19 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=19 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=19 0 
+* 210
+* 8
++5 16
+cfn=(1234)
+calls=19 2185 
+* 698
+* 6
++2 6
++3 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=19 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=19 0 
+* 90
+* 2
++1 4
+
+fl=(315)
+fn=(3380)
+185 9
++2 1
++2 10
++9 16
++4 5
++3 8
+cob=(2)
+cfi=(18)
+cfn=(2550)
+calls=1 0 
+* 676
+* 2
++3 1
++1 1
++1 2
+
+fl=(309)
+fn=(2428)
+255 7
++7 4
+cob=(2)
+cfi=(18)
+cfn=(2430)
+calls=3 0 
+* 10
++1 2
++6 1
++1 5
+
+fl=(259)
+fn=(1764)
+787 4
++1 1
++1 1
++2 10
++3 2
+cob=(2)
+cfi=(18)
+cfn=(1016)
+calls=78 0 
+* 279
+* 3
++4 3
+cfn=(1776) H5CX__push_common
+calls=78 -51 
+* 90
+* 1
++3 1
++1 2
+
+fn=(1782)
+3580 4
++2 1
++2 10
++3 1
+cfn=(1784) H5CX__pop_common
+calls=78 -62 
+* 62
+* 3
++4 3
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=78 0 
+* 99
+* 2
++3 1
++1 2
+
+fn=(2574)
+1535 4
++1 1
+cfn=(1778) H5CX__get_context
+calls=15 697 
+* 40
+* 1
++2 3
++5 3
++1 2
+
+fn=(1776)
+747 5
++1 1
+cfn=(1778)
+calls=79 -51 
+* 40
+* 1
++2 4
++6 4
++1 4
++1 4
++1 4
++1 4
++1 4
++1 2
++1 2
++3 4
++1 3
++2 2
++1 2
+
+fn=(2054)
+1659 24
++1 6
+cfn=(1778)
+calls=120 697 
+* 240
+* 6
++2 18
++5 18
++1 12
+
+fn=(2092)
+1685 8
++1 2
+cfn=(1778)
+calls=54 697 
+* 80
+* 2
++2 6
++5 6
++1 4
+
+fn=(2612)
+1587 10
++1 2
+cfn=(1778)
+calls=26 697 
+* 80
+* 2
++1 2
++2 20
++7 10
++2 6
++2 3
++3 2
++1 4
+
+fn=(3240)
+1130 5
++1 1
+cfn=(1778)
+calls=2 697 
+* 40
+* 1
++2 4
++6 4
++2 2
++1 2
+
+fn=(1784)
+3525 4
++1 1
+cfn=(1778)
+calls=79 697 
+* 40
+* 1
++1 1
++5 4
++24 3
++1 5
++5 1
++1 2
+
+fn=(2058)
+2799 60
++1 12
+cfn=(1778)
+calls=216 697 
+* 480
+* 12
++2 48
++5 48
++2 24
++1 24
+
+fn=(2096)
+2827 10
++1 2
+cfn=(1778)
+calls=35 697 
+* 80
+* 2
++2 8
++5 8
++2 4
++1 4
+
+fn=(1778)
+697 128
++1 32
++2 128
++2 128
+cob=(2)
+cfi=(18)
+cfn=(910)
+calls=676 0 
+* 672
+* 32
++2 64
++24 32
++1 64
+
+fn=(2616)
+1467 10
++1 2
+cfn=(1778)
+calls=24 697 
+* 80
+* 2
++1 2
++2 20
++6 8
++3 8
++3 2
++1 4
+
+fn=(3352)
+2002 6
++1 1
+cfn=(1778)
+calls=2 697 
+* 40
+* 1
++1 1
++2 10
++7 20
+cob=(2)
+cfi=(18)
+cfn=(1086)
+calls=2 0 
+* 35
+* 4
++3 6
++3 1
++1 3
+
+fn=(3274)
+2354 6
++1 1
+cfn=(1778)
+calls=2 697 
+* 40
+* 1
++1 1
++2 10
++8 6
++2 7
++1 5
++17 3
++4 6
++3 1
++1 3
+
+fl=(206)
+fn=(1796)
+356 4
++1 1
++2 4
++2 4
+cob=(2)
+cfi=(18)
+cfn=(910)
+calls=108 0 
+* 21
+* 1
++2 2
++25 1
++1 2
+
+fl=(337)
+fn=(3314)
+164 6
++1 1
++2 5
++7 6
+cob=(2)
+cfi=(18)
+cfn=(2112)
+calls=1 0 
+* 4049
+* 6
++3 1
++1 1
++1 2
+
+fn=(3366)
+1233 19
++1 1
++2 5
++12 5
+cob=(2)
+cfi=(18)
+cfn=(3368)
+calls=1 0 
+* 321
+* 2
++4 3
++1 5
++1 3
++1 3
++3 14
+cob=(2)
+cfi=(18)
+cfn=(3372)
+calls=1 0 
+* 938
+* 4
++21 1
++1 5
+
+fn=(3344)
+645 10
++1 1
++2 5
++10 10
+cfi=(350)
+cfn=(3346)
+calls=1 312 
+* 6768
+* 2
++3 1
++1 1
++1 2
+
+fn=(3306)
+527 10
++1 2
++2 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=3 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=3 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=3 0 
+* 210
+* 8
++6 10
++2 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=3 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=3 0 
+* 90
+* 2
++1 4
+
+fn=(3376)
+984 8
++1 2
++1 3
++1 3
++1 3
++3 2
++2 1
++4 1
++2 5
++3 4
++7 5
++3 5
++3 4
++2 4
++1 8
+cob=(2)
+cfi=(18)
+cfn=(3378)
+calls=1 0 
+* 733
+* 2
+1178 1
++1 2
+
+fn=(3342)
+582 10
++1 5
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 4
++2 7
++1 7
++2 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 1
++1 2
+
+fl=(336)
+fn=(3330)
+702 7
++2 1
++2 5
++7 4
+cob=(2)
+cfi=(18)
+cfn=(2808)
+calls=1 0 
+* 90
+* 3
++2 2
++2 13
+cob=(2)
+cfi=(18)
+cfn=(3332)
+calls=1 0 
+* 2955
+* 2
++4 1
++1 1
++1 2
+
+fl=(244)
+fn=(3318)
+3455 6
++1 1
++1 1
++2 5
++7 2
++1 1
++3 3
+cob=(2)
+cfi=(18)
+cfn=(2352)
+calls=1 0 
+* 1832
+* 3
++4 4
++1 6
+cob=(2)
+cfi=(18)
+cfn=(3328)
+calls=1 0 
+* 3088
+* 2
++4 1
++4 4
++12 1
++2 2
++1 3
+cob=(2)
+cfi=(18)
+cfn=(2434)
+calls=1 0 
+* 267
+* 2
++3 1
++1 2
+
+fn=(3310)
+2287 12
++1 3
++1 3
++2 1
++1 1
++1 1
++2 5
++10 5
+cob=(2)
+cfi=(18)
+cfn=(2932)
+calls=1 0 
+* 25
+* 7
++2 4
++2 14
++2 9
+cfi=(337)
+cfn=(3306)
+calls=1 527 
+* 319
+* 3
++2 4
++2 6
+cob=(2)
+cfi=(18)
+cfn=(3312)
+calls=1 0 
+* 4079
+* 2
++4 2
++6 1
++2 3
++66 2
++1 4
++18 7
+cob=(2)
+cfi=(18)
+cfn=(2946)
+calls=1 0 
+* 37
+* 2
++5 5
++1 3
+-1 2
++1 3
++13 4
++2 4
+cob=(2)
+cfi=(18)
+cfn=(3316)
+calls=1 0 
+* 5239
+* 2
++4 1
++1 1
++1 5
+
+fl=(289)
+fn=(2132)
+101 7
++1 1
++2 10
++12 2
++7 12
+cfn=(2134) H5MF__aggr_alloc
+calls=1 +33 
+* 3214
+* 3
++7 1
++5 1
++1 2
+
+fn=(2134)
+156 13
++1 1
++1 1
++1 1
++1 1
++2 5
++16 5
+cob=(2)
+cfi=(18)
+cfn=(2136)
+calls=7 0 
+* 385
+* 3
++19 19
++4 1
++1 1
++2 1
++8 3
+cob=(2)
+cfi=(18)
+cfn=(2140)
+calls=7 0 
+* 14
+* 1
++1 2
++1 1
++3 2
++5 6
++1 7
++3 7
++1 1
++3 4
++1 4
++3 26
++3 4
++2 2
++11 18
++1 4
+-1 2
++1 9
++6 8
+cob=(2)
+cfi=(18)
+cfn=(2144)
+calls=1 0 
+* 2599
+* 3
++77 3
++5 2
+197 1
+371 3
+cob=(2)
+cfi=(18)
+cfn=(2140)
+calls=7 0 
+* 14
+* 5
+cob=(2)
+cfi=(18)
+cfn=(2174)
+calls=7 0 
+* 14
++3 1
++4 1
++1 6
+
+fl=(236)
+fn=(2362)
+2952 15
++1 3
++2 15
++6 12
++1 3
+cob=(2)
+cfi=(18)
+cfn=(3320)
+calls=1 0 
+* 102
+* 2
++4 18
++3 3
++1 6
+
+fn=(2414)
+2988 15
++1 3
++2 15
++6 15
++3 12
++1 3
+cob=(2)
+cfi=(18)
+cfn=(2336)
+calls=3 0 
+* 209
+* 2
++3 3
++1 3
++1 6
+
+fn=(2366)
+1312 7
++1 1
++2 10
++7 4
++21 11
+cob=(2)
+cfi=(18)
+cfn=(2316)
+calls=22 0 
+* 279
+* 2
++3 1
++1 1
++1 2
+
+fn=(2354)
+1229 5
++1 1
++1 1
++2 10
++6 5
+cob=(2)
+cfi=(18)
+cfn=(2356)
+calls=5 0 
+* 1332
+* 3
++5 3
+cob=(2)
+cfi=(18)
+cfn=(2360)
+calls=5 0 
+* 133
+* 2
++4 2
++4 8
+cob=(2)
+cfi=(18)
+cfn=(2364)
+calls=5 0 
+* 320
+* 2
++3 1
++1 2
+
+fn=(2358)
+1043 11
++1 1
++4 1
++2 8
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=22 0 
+* 141
+* 9
++10 4
++4 4
+cob=(2)
+cfi=(18)
+cfn=(2012)
+calls=22 0 
+* 316
+* 1
++1 8
++4 1
++1 1
++1 1
++1 1
++1 1
++1 3
++1 2
++1 1
++1 5
+cob=(2)
+cfi=(18)
+cfn=(996)
+calls=22 0 
+* 14
++1 2
++1 3
++3 10
+cob=(2)
+cfi=(18)
+cfn=(2304)
+calls=22 0 
+* 677
+* 3
++4 3
++82 2
++31 2
++3 2
++4 4
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=22 0 
+* 82
+* 1
++1 5
+
+fn=(2424)
+1367 12
++1 1
++1 1
++2 1
++2 5
++6 6
++2 1
+cob=(2)
+cfi=(18)
+cfn=(2426)
+calls=3 0 
+* 31
+* 1
++3 4
++4 2
++1 120
+-1 37
++5 5
++16 14
+cob=(2)
+cfi=(18)
+cfn=(2404)
+calls=1 0 
+* 590
+* 3
++4 11
++6 11
++3 9
++1 2
++16 8
+cob=(2)
+cfi=(18)
+cfn=(2408)
+calls=2 0 
+* 305
+* 2
++3 1
++1 6
+
+fn=(2436)
+1276 5
++1 1
++2 10
++7 3
+cob=(2)
+cfi=(18)
+cfn=(2412)
+calls=5 0 
+* 240
+* 2
++3 1
++1 1
++1 2
+
+fl=(227)
+fn=(2948)
+3419 6
++1 1
++2 10
++6 4
++3 8
++1 3
++10 1
++1 2
+
+fl=(161)
+fn=(3382)
+0 24
+
+fn=(1070)
+0 106
+
+fn=(2312)
+0 67
+
+fl=(308)
+fn=(2410)
+237 16
++1 2
++2 10
++7 8
++2 4
++2 8
+cob=(2)
+cfi=(18)
+cfn=(2166)
+calls=14 0 
+* 200
+* 4
++5 8
+cob=(2)
+cfi=(18)
+cfn=(2412)
+calls=14 0 
+* 52
+* 4
++4 6
+cob=(2)
+cfi=(18)
+cfn=(1092)
+calls=14 0 
+* 274
+* 4
++9 2
++1 4
+
+fn=(2406)
+163 20
++1 2
++1 2
++2 16
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=14 0 
+* 282
+* 8
++8 4
++3 4
+cob=(2)
+cfi=(18)
+cfn=(1016)
+calls=14 0 
+* 558
+* 6
++4 6
+cob=(2)
+cfi=(18)
+cfn=(2360)
+calls=14 0 
+* 52
+* 4
++4 6
++1 6
++1 8
++22 4
++4 4
++4 8
+cob=(2)
+cfi=(18)
+cfn=(2048)
+calls=14 0 
+* 164
+* 2
++1 10
+
+fl=(318)
+fn=(2556)
+424 9
++2 1
++2 10
++8 3
++3 7
+826 8
+cob=(2)
+cfi=(18)
+cfn=(2568)
+calls=1 0 
+* 576
+* 2
++4 2
++1 1
++1 2
+
+fl=(284)
+fn=(3304)
+249 4
++2 3
++4 2
++1 2
+
+fn=(2138)
+986 12
++1 2
++2 20
++6 14
+cob=(2)
+cfi=(18)
+cfn=(2038)
+calls=24 0 
+* 704
+* 6
++3 2
++1 2
++1 4
+
+fn=(2142)
+1187 8
++2 6
++5 6
++1 4
+
+fn=(3370)
+863 6
++2 5
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 3
++4 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 7
++1 2
+
+fn=(2014)
+111 15
++2 15
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=76 0 
+* 24
+* 3
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=76 0 
+* 141
+* 9
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=76 0 
+* 315
+* 9
++4 9
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=76 0 
+* 249
+* 3
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=76 0 
+* 135
+* 9
++1 6
+
+fn=(2176)
+1209 4
++2 3
++5 3
++1 2
+
+fn=(3262)
+1321 4
++1 3
++4 2
++1 2
+
+fl=(325)
+fn=(3248)
+187 15
++1 2
++1 1
++1 1
++1 1
++2 1
++3 4
++4 5
+cob=(2)
+cfi=(18)
+cfn=(3250)
+calls=1 0 
+* 330
+* 2
++2 5
+cob=(2)
+cfi=(18)
+cfn=(3250)
+calls=1 0 
+* 330
+* 2
++4 8
+cob=(2)
+cfi=(18)
+cfn=(3254)
+calls=1 0 
+* 27073
+* 2
++3 1
++1 1
++1 5
+
+fl=(335)
+fn=(3386)
+1497 10
++1 2
++2 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 8
++6 12
+cfi=(323)
+cfn=(3388)
+calls=4 454 
+* 20
+* 2
++2 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+* 2
++1 4
+
+fn=(3290)
+1786 9
++1 1
++1 1
++1 1
++1 1
++1 1
++2 11
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=2 0 
+* 8
+* 1
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=2 0 
+* 47
+* 3
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=2 0 
+* 105
+* 4
++7 6
++5 8
++24 6
++1 2
++1 3
++6 3
++1 3
++5 4
++1 4
++3 4
++7 9
+cfi=(323)
+cfn=(3292)
+calls=2 744 
+* 42
+* 2
++2 9
+cfi=(323)
+cfn=(3292)
+calls=2 744 
+* 42
+* 2
++4 4
+cfi=(161)
+cfn=(1070)
+calls=2 0 
+* 12
+* 1
++1 4
+cfi=(161)
+cfn=(1070)
+calls=2 0 
+* 12
+* 1
++1 1
++6 8
++1 8
+-1 2
++5 3
+cfi=(161)
+cfn=(1070)
+calls=2 0 
+* 12
+* 1
++1 3
+cfi=(161)
+cfn=(1070)
+calls=2 0 
+* 12
+* 1
+-12 4
++16 3
++12 6
+cfi=(323)
+cfn=(3294)
+calls=2 881 
+* 10
+* 8
+cfi=(323)
+cfn=(3294)
+calls=2 881 
+* 10
+* 2
++5 2
+2028 2
++2 2
++2 2
++2 2
++3 3
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=2 0 
+* 83
+* 1
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=2 0 
+* 45
+* 1
++1 5
+
+fn=(3362)
+1458 20
++1 2
++2 12
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 8
++6 30
+cfi=(323)
+cfn=(3364)
+calls=4 397 
+* 110
+* 8
++3 2
++1 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+* 2
++1 4
+
+fn=(3286)
+436 10
++1 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 6
++5 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+* 4
++1 4
+
+fn=(3356)
+1155 16
++1 2
++2 10
+cob=(2)
+cfi=(18)
+cfn=(878)
+calls=4 0 
+* 16
+* 2
+cob=(2)
+cfi=(18)
+cfn=(906)
+calls=4 0 
+* 94
+* 6
+cob=(2)
+cfi=(18)
+cfn=(926)
+calls=4 0 
+* 210
+* 8
++9 8
++3 8
++1 22
+cob=(2)
+cfi=(18)
+cfn=(1086)
+calls=4 0 
+* 70
++1 22
+cob=(2)
+cfi=(18)
+cfn=(1086)
+calls=4 0 
+* 70
++4 6
++3 8
++3 6
++3 16
+cfi=(323)
+cfn=(3358)
+calls=4 158 
+* 38
+* 2
++3 6
+cob=(2)
+cfi=(18)
+cfn=(976)
+calls=4 0 
+* 166
+* 2
+cob=(2)
+cfi=(18)
+cfn=(984)
+calls=4 0 
+* 90
+* 2
++1 4
+
+ob=(3)
+fl=(205)
+fn=(998)
+147 1
++1 1
++1 1
++1 1
++1 3545
++1 1
++1 1
++14 6
++1 18
++5 6
++1 6
++1 5
++1 5
++8 5
++1 5
++3 4
++1 4
++1 1
++1 1
++1 1
++1 1
++2 1
++1 1
++3 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++1 3
++2 6
++1 6
++1 6
++1 6
++1 6
++1 6
++1 6
++1 3
++1 3
++11 1
++1 1
++25 1
++1 1
++1 1
++1 1
+
+fl=(164)
+fn=(748)
+cob=(11)
+cfi=(168)
+cfn=(768)
+calls=1 322 
+308 31178
+
+fl=(157) /build/glibc-YYA7BZ/glibc-2.31/misc/sbrk.c
+fn=(578) sbrk
+32 30
++8 10
+-8 20
++8 60
++4 20
++4 9
++12 30
+-10 6
+-2 12
++8 8
+cfi=(158) /build/glibc-YYA7BZ/glibc-2.31/misc/../sysdeps/unix/sysv/linux/x86_64/brk.c
+cfn=(580) brk
+calls=8 -28 
+* 44
+* 8
++4 20
+
+fl=(156) /build/glibc-YYA7BZ/glibc-2.31/malloc/morecore.c
+fn=(576) __default_morecore
+46 20
++1 10
+cfi=(157)
+cfn=(578)
+calls=15 -15 
+* 277
++2 30
++3 20
+
+fl=(158)
+fn=(580)
+28 4
++3 24
++2 8
++6 4
++1 4
+
+fl=(148)
+fn=(572) _int_malloc
+1208 26
+3513 13
+1210 13
+3513 104
+1210 26
+3553 2
++24 2
++61 6
++2 6
+-2 6
++2 12
+1210 24
+3553 24
+1637 24
+3577 24
++58 20
++62 245
++1 21
+3577 2
+1210 2
+3582 2
++2 2
+-2 4
++2 4
++5 18
+4147 135
+3637 18
++3 66
++77 6
++1 6
+-1 12
+-1 12
++2 12
+-1 7
++1 7
+-1 14
+-1 14
++2 14
+-2 39
++6 26
++73 39
+-67 39
+3917 26
++2 21
++3 7
+-3 7
++3 14
++68 26
++1 13
++1 13
+-1 13
++1 13
++1 26
++1 39
++5 26
++4 39
++3 24
+-3 18
++3 24
+-3 12
++3 18
++97 13
++1 26
++2 26
++3 40
++17 3
+-12 12
+-3 12
++1 24
++2 12
+-1 12
++1 12
++2 12
++3 12
+-5 60
++2 12
+1868 36
+4141 4
+cfn=(574) sysmalloc
+calls=15 2255 
+* 166
+* 1
++1 2
+1868 3
+
+fn=(574)
+2255 8
++20 2
++11 2
++1 5
+fi=(150) /build/glibc-YYA7BZ/glibc-2.31/malloc/arena.c
+536 3
+fe=(148)
+2302 4
++66 1
++1 3
++1 1
++9 9
++6 3
++3 3
+2705 2
++1 1
++5 2
++3 2
++2 2
++1 1
+-1 1
++2 3
++1 1
++1 1
++2 1
+-3 2
++1 1
++8 9
+2449 9
++11 1
++8 3
++2 5
+cfi=(156)
+cfn=(576)
+calls=5 46 
+* 48
+* 1
++1 1
++3 4
++3 2
++1 2
++46 7
++2 1
++6 4
++1 5
+
+fn=(916)
+3366 8
++10 4
+-10 16
++10 32
++8 8
++1 8
++9 12
++2 12
++10 4
++1 12
++21 12
+cfn=(572)
+calls=436 1208 
+* 549
+* 4
++2 20
++3 12
++14 8
++6 16
++52 28
+-44 4
++3 8
++11 4
++2 8
++2 8
+-49 20
++20 4
++14 20
++16 12
+cob=(2)
+cfi=(18)
+cfn=(1124)
+calls=360 0 
+* 3695
+* 8
+
+fn=(3390) systrim.isra.0.constprop.0
+2741 25
++11 15
++2 5
++1 10
+-4 5
++8 15
++2 15
++7 9
+cfi=(156)
+cfn=(576)
+calls=3 46 
+* 81
+* 3
++1 12
+-13 2
++49 30
+-24 9
+cfi=(156)
+cfn=(576)
+calls=3 46 
+* 147
++2 6
++1 6
++2 6
+cfi=(156)
+cfn=(576)
+calls=3 46 
+* 81
++2 3
++2 6
++4 6
++4 6
+-1 3
++1 6
++2 6
+
+fn=(1098)
+3087 22
++5 22
++1 22
++6 22
++5 11
+-2 11
++2 22
++18 33
++2 33
++1 11
++1 11
+-1 11
+cfn=(1100) _int_free
+calls=6760 4155 
+* 1637
+
+fn=(1100)
+4155 121
++10 33
++6 55
++1 22
++4 44
++8 55
+-1 22
++1 22
++3 4
++6 8
++13 20
++14 18
+4428 121
+4295 18
++3 9
++3 27
++7 9
+-4 9
++4 18
++3 18
++5 27
++3 18
++1 18
++1 18
+1875 27
+4327 18
++1 2
++2 2
+-1 2
++2 8
++2 4
+cfn=(1220) unlink_chunk.isra.0
+calls=107 1451 
+* 42
++3 18
++5 4
++4 2
++9 2
+-1 2
++2 4
++2 8
++2 4
++5 2
++1 2
++2 6
++1 2
++30 18
++20 27
+2924 4
++4 2
+-2 4
++1 2
++1 2
+4209 2
+4361 6
++38 15
++3 15
+-23 7
++1 21
++1 14
+-68 27
+-2 18
++93 25
++2 10
+cfn=(3390)
+calls=6 2741 
+* 518
+* 5
+
+fn=(1220)
+1451 2
++2 10
++3 2
++1 2
++2 8
++3 2
++1 2
++1 10
++24 4
+
+fn=(544)
+3023 9
++8 9
+-8 36
++8 9
++1 18
+1208 18
++2 36
+3044 36
++3 18
++9 27
++2 27
+cfn=(572)
+calls=3030 1208 
+* 1428
+* 9
++1 63
++23 45
+1210 32
+3048 3
++1 9
+
+fl=(194)
+fn=(934)
+24 37
++1 37
++1 37
+
+fl=(201)
+fn=(968)
+225 5
++1 5
++6 5
++1 5
++44 5
++1 5
++2 5
++1 5
++31 5
++1 5
++1 5
++1 5
++1 5
+
+fl=(118)
+fn=(2432)
+32 1
++1 2
++2 4
++1 1
+
+fl=(212)
+fn=(1058)
+24 36
++1 108
++1 36
+
+ob=(5)
+fl=(191)
+fn=(912)
+25 107
++5 214
++1 535
++24 107
++1 214
++4 642
++5 214
+
+fl=(184)
+fn=(880)
+136 37
++3 37
++1 74
++4 74
+
+fl=(193)
+fn=(924)
+26 2
++3 4
+-3 2
++6 2
++2 12
++24 6
++10 2
++1 6
+-25 1
+-5 1
++5 1
+-5 1
++5 1
++5 2
++5 2
++2 2
+-17 2
++10 2
++5 2
++2 2
+
+fl=(154)
+fn=(560)
+356 74
+41 222
++1 222
++5 148
++8 74
++3 74
+-6 74
++6 296
++2 74
+358 148
+
+fl=(320)
+fn=(2580)
+28 2
++1 7
++1 1
+
+fl=(152)
+fn=(554)
+64 74
++3 222
++2 74
++2 148
+-7 148
++11 148
++2 222
++3 296
++1 222
++75 74
++3 74
++2 74
++3 74
++2 74
++1 222
+
+fl=(204)
+fn=(982)
+36 8
++1 1
++5 1
++1 3
++54 9
+
+totals: 31178
