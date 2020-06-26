@@ -90,8 +90,9 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
     data[i] = i;
   }
 
-  auto write_func = [&data, &dset_ids, dset_names](int dset_index, int name_index, hid_t mspace_id,
-                                                   hid_t fspace_id, void *buf, int elems_written) {
+  auto write_func = [&data, dset_names](int dset_index, const std::vector<hid_t> &dset_ids,
+                                        int name_index, hid_t mspace_id, hid_t fspace_id,
+                                        void *buf, int elems_written) {
     assert(H5Dwrite(dset_ids[dset_index], H5T_NATIVE_ULONG, mspace_id, fspace_id, H5P_DEFAULT,
                     buf) >= 0);
     fprintf(stderr, "Wrote %d of %zu elements to dataset %s\n", elems_written, (size_t)dset_size,
@@ -105,6 +106,15 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
   if (do_on_worker) {
     if (num_threads != num_dsets) {
       assert(num_dsets == 1);
+
+      // NOTE(chogan): Each thread needs to open the same dataset
+      std::vector<hid_t> local_dset_ids;
+      for (int i = 0; i < num_threads; ++i) {
+        hid_t dataset_id = H5Dopen(file_id, dset_names[0], H5P_DEFAULT);
+        assert(dataset_id >= 0);
+        local_dset_ids.push_back(dataset_id);
+      }
+
       // NOTE(chogan): Main thread sets up dataspaces for partial writes
       std::vector<hid_t> dspaces;
       hsize_t offset = 0;
@@ -116,10 +126,10 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
       assert(mspace >= 0);
 
       for (int i = 0; i < num_threads; ++i) {
-        hid_t dspace_id = H5Dget_space(dset_ids[i]);
-        assert(dspace >= 0);
+        hid_t dspace_id = H5Dget_space(local_dset_ids[i]);
+        assert(dspace_id >= 0);
         assert(H5Sselect_hyperslab(dspace_id, H5S_SELECT_SET, &offset, &stride, &count, &block) >= 0);
-        dspaces.push_back(dspace);
+        dspaces.push_back(dspace_id);
 
         hssize_t dspace_elems = H5Sget_select_npoints(dspace_id);
         hssize_t mspace_elems = H5Sget_select_npoints(mspace);
@@ -132,7 +142,7 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
       for (int i = 0; i < num_threads; ++i) {
         size_t data_offset = i * count;
         int name_index = num_dsets == 1 ? 0 : i;
-        threads.push_back(std::thread(write_func, i, name_index, mspace, dspaces[i],
+        threads.push_back(std::thread(write_func, i, local_dset_ids, name_index, mspace, dspaces[i],
                                       data.data() + data_offset, count));
       }
 
@@ -141,15 +151,17 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
       }
       end = now();
 
+      // NOTE(chogan): Close resources
+      assert(H5Sclose(mspace) >= 0);
       for (int i = 0; i < num_threads; ++i) {
         assert(H5Sclose(dspaces[i]) >= 0);
       }
-      assert(H5Sclose(mspace) >= 0);
     } else {
       // NOTE(chogan): Each thread writes a whole dataset
       start = now();
       for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(write_func, i, i, H5S_ALL, H5S_ALL, data.data(), dset_size));
+        threads.push_back(std::thread(write_func, i, dset_ids, i, H5S_ALL, H5S_ALL, data.data(),
+                                      dset_size));
       }
 
       for (int i = 0; i < num_threads; ++i) {
@@ -160,7 +172,7 @@ void write_datasets(const char *file_name, const char **dset_names, int num_dset
   } else {
     start = now();
     for (int i = 0; i < num_dsets; ++i) {
-      write_func(i, i, H5S_ALL, H5S_ALL, data.data(), dset_size);
+      write_func(i, dset_ids, i, H5S_ALL, H5S_ALL, data.data(), dset_size);
     }
     end = now();
   }
@@ -429,7 +441,7 @@ int main (int argc, char* argv[]) {
 
   // NOTE(chogan): Stop vtune collection so the computationally expensive
   // verification isn't added to the profile
-  __itt_pause();
+  // __itt_pause();
 
   if (verify_results) {
     fprintf(stderr, "Verifying results\n");
