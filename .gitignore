@@ -1,5 +1,7 @@
 *.o
 *.h5
+posix_test.out
 mth5
+mt_posix_io
 .gdb_history
 

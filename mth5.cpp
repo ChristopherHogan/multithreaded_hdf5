@@ -1,12 +1,9 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 #include <chrono>
-#include <condition_variable>
-#include <mutex>
 #include <thread>
 #include <vector>
 
