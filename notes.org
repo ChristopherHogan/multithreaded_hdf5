@@ -429,7 +429,7 @@ int main (int argc, char* argv[])
 **** read file->access_flags
 **** read file->base_addr
 **** read file->cls->read
-*** H5DF_sec2_read(file, ...)
+*** H5FD_sec2_read(file, ...)
 **** write file->pos = addr;
 **** write file->op = OP_READ;
 *** pread(file->fd, ...)
